@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36623.8 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "project_dotnet_4_v2.client", "project_dotnet_4_v2.client\project_dotnet_4_v2.client.esproj", "{09F7498B-38C8-E00D-E4E2-8ABBD5E1B52E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project_Dotnet_4_V2.Server", "Project_Dotnet_4_V2.Server\Project_Dotnet_4_V2.Server.csproj", "{BFB7F102-EF04-42C1-8586-56B45509F1FF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{09F7498B-38C8-E00D-E4E2-8ABBD5E1B52E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09F7498B-38C8-E00D-E4E2-8ABBD5E1B52E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09F7498B-38C8-E00D-E4E2-8ABBD5E1B52E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{09F7498B-38C8-E00D-E4E2-8ABBD5E1B52E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09F7498B-38C8-E00D-E4E2-8ABBD5E1B52E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09F7498B-38C8-E00D-E4E2-8ABBD5E1B52E}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{BFB7F102-EF04-42C1-8586-56B45509F1FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFB7F102-EF04-42C1-8586-56B45509F1FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFB7F102-EF04-42C1-8586-56B45509F1FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFB7F102-EF04-42C1-8586-56B45509F1FF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {647365C9-4E7C-4B64-B13B-01F364148B75}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,77 @@
+<div class="register-container">
+  <div class="register-card">
+    <h2>Inscription</h2>
+    <p class="subtitle">Créez votre compte MisterTicket</p>
+
+    <form (ngSubmit)="onRegister()">
+      <div class="form-row">
+
+
+
+      </div>
+
+      <div class="form-group">
+        <label for="username">Nom d'utilisateur</label>
+        <input type="text"
+               id="username"
+               [(ngModel)]="username"
+               name="username"
+               placeholder="Choisissez un nom d'utilisateur"
+               required
+               [disabled]="isLoading">
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email"
+               id="email"
+               [(ngModel)]="email"
+               name="email"
+               placeholder="votre.email@exemple.com"
+               required
+               [disabled]="isLoading">
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <input type="password"
+               id="password"
+               [(ngModel)]="password"
+               name="password"
+               placeholder="Minimum 6 caractères"
+               required
+               [disabled]="isLoading">
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirmer le mot de passe</label>
+        <input type="password"
+               id="confirmPassword"
+               [(ngModel)]="confirmPassword"
+               name="confirmPassword"
+               placeholder="Retapez votre mot de passe"
+               required
+               [disabled]="isLoading">
+      </div>
+
+      <div class="error" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <div class="success" *ngIf="successMessage">
+        {{ successMessage }}
+      </div>
+
+      <button type="submit"
+              class="btn-primary"
+              [disabled]="isLoading">
+        {{ isLoading ? 'Inscription en cours...' : 'S\'inscrire' }}
+      </button>
+    </form>
+
+    <p class="login-link">
+      Déjà un compte ?
+      <a routerLink="/login">Se connecter</a>
+    </p>
+  </div>
+</div>

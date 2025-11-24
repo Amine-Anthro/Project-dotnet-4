@@ -1,0 +1,94 @@
+<div class="event-detail-container">
+ 
+  <div *ngIf="isLoading" class="loading">
+    Chargement...
+  </div>
+
+  
+  <div *ngIf="errorMessage" class="error">
+    {{ errorMessage }}
+    <button (click)="goBack()" class="btn-back">Retour</button>
+  </div>
+
+  <div *ngIf="event && !isLoading">
+   
+    <div class="event-header">
+      <button (click)="goBack()" class="btn-back">← Retour</button>
+      <div class="event-info">
+        <img [src]="event.imageUrl || 'assets/placeholder.jpg'"
+             [alt]="event.name"
+             class="event-poster">
+        <div class="event-details">
+          <h1>{{ event.name }}</h1>
+          <p class="event-date"> {{ event.date | date:'EEEE dd MMMM yyyy à HH:mm':'':'fr' }}</p>
+          <p class="event-description">{{ event.description }}</p>
+          <p class="event-room"> Salle {{ event.room?.number }} - Capacité: {{ event.room?.capacity }} places</p>
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="seat-selection">
+      <h2>Sélectionnez vos places</h2>
+
+      
+      <div class="legend">
+        <div class="legend-item">
+          <span class="seat available"></span>
+          <span>Disponible</span>
+        </div>
+        <div class="legend-item">
+          <span class="seat selected"></span>
+          <span>Sélectionné</span>
+        </div>
+        <div class="legend-item">
+          <span class="seat reserved"></span>
+          <span>Réservé</span>
+        </div>
+        <div class="legend-item">
+          <span class="seat paid"></span>
+          <span>Occupé</span>
+        </div>
+      </div>
+
+      
+      <div class="screen">ÉCRAN</div>
+
+     
+      <div class="seats-container">
+        <div *ngFor="let row of getRows()" class="seat-row">
+          <span class="row-label">{{ row }}</span>
+          <div class="seats">
+            <div *ngFor="let seat of getSeatsByRow()[row]"
+                 [class]="getSeatClass(seat)"
+                 (click)="toggleSeat(seat)"
+                 [title]="'Rangée ' + seat.row + ' - Siège ' + seat.number + ' - ' + seat.price + '€'">
+              {{ seat.number }}
+            </div>
+          </div>
+          <span class="row-label">{{ row }}</span>
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="reservation-summary" *ngIf="selectedSeats.length > 0">
+      <div class="summary-content">
+        <h3>Votre sélection</h3>
+        <div class="selected-seats-list">
+          <div *ngFor="let seat of selectedSeats" class="selected-seat-item">
+            <span>Rangée {{ seat.row }} - Siège {{ seat.number }}</span>
+            <span class="seat-price">{{ seat.price }}€</span>
+          </div>
+        </div>
+        <div class="total">
+          <strong>Total:</strong>
+          <strong>{{ totalPrice.toFixed(2) }}€</strong>
+        </div>
+        <button (click)="proceedToReservation()" class="btn-reserve">
+          Réserver ({{ selectedSeats.length }} siège{{ selectedSeats.length > 1 ? 's' : '' }})
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

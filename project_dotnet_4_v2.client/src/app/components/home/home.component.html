@@ -1,0 +1,26 @@
+<div class="home-container">
+  <h1>Événements disponibles</h1>
+
+  <div *ngIf="isLoading" class="loading">
+    Chargement des événements...
+  </div>
+
+  <div *ngIf="errorMessage" class="error">
+    {{ errorMessage }}
+  </div>
+
+  <div class="events-grid">
+    <div *ngFor="let event of events" class="event-card" (click)="viewEventDetails(event.id)">
+      <img [src]="event.imageUrl || 'assets/placeholder.jpg'"
+           [alt]="event.name"
+           class="event-image">
+      <div class="event-info">
+        <h3>{{ event.name }}</h3>
+        <p class="event-date">{{ event.date | date:'dd/MM/yyyy à HH:mm' }}</p>
+        <p class="event-description">{{ event.description }}</p>
+        <p class="event-price">À partir de {{ event.basePrice }}€</p>
+        <button class="btn-reserve">Réserver</button>
+      </div>
+    </div>
+  </div>
+</div>
