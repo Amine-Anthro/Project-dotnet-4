@@ -2,6 +2,7 @@
 using Projet_Dotnet_4.Models;
 using Projet_Dotnet_4.Repositories;
 using Projet_Dotnet_4.Data;
+using Projet_Dotnet_4.DTO.Auth;
 
 namespace Projet_Dotnet_4.Services
 {
@@ -36,7 +37,7 @@ namespace Projet_Dotnet_4.Services
             _context.SaveChanges();
         }
 
-        public User? Get(UserLogin userLogin)
+        public User? Get(UserDTO userLogin)
         {
             return _context.Users.FirstOrDefault(
                 u => u.Username.Equals(userLogin.Username, StringComparison.OrdinalIgnoreCase)

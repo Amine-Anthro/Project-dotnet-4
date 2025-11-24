@@ -27,7 +27,7 @@ namespace Projet_Dotnet_4.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] UserLogin userLogin)
+        public IActionResult Login([FromBody] LoginDTO userLogin)
         {
             try
             {
