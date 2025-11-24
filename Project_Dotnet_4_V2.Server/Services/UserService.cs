@@ -37,7 +37,7 @@ namespace Projet_Dotnet_4.Services
             _context.SaveChanges();
         }
 
-        public User? Get(UserDTO userLogin)
+        public User? Get(LoginDTO userLogin)
         {
             return _context.Users.FirstOrDefault(
                 u => u.Username.Equals(userLogin.Username, StringComparison.OrdinalIgnoreCase)

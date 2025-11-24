@@ -1,4 +1,5 @@
-﻿using Projet_Dotnet_4.Models;
+﻿using Projet_Dotnet_4.DTO.Auth;
+using Projet_Dotnet_4.Models;
 
 namespace Projet_Dotnet_4.Services
 {
@@ -8,6 +9,6 @@ namespace Projet_Dotnet_4.Services
         bool UsernameExists(string username);
         bool EmailExists(string email);
         void Create(User user);
-        public User Get(UserLogin userLogin);
+        public User Get(LoginDTO userLogin);
     }
 }
