@@ -23,6 +23,7 @@ export class EventDetailComponent implements OnInit {
   ngOnInit(): void {
     const eventId = Number(this.route.snapshot.paramMap.get('id'));
     this.loadEventDetails(eventId);
+    
   }
 
   loadEventDetails(id: number): void {
