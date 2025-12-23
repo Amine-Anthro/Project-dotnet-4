@@ -7,6 +7,7 @@
         public string Row { get; set; } = string.Empty;
         public int RoomId { get; set; }
         public SeatStatus Status { get; set; } = SeatStatus.Available;
+        public TariffZone Zone { get; set; } = TariffZone.Standard;
         public decimal Price { get; set; }
 
 

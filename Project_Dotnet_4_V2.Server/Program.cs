@@ -1,14 +1,14 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Projet_Dotnet_4.Data;
 using Projet_Dotnet_4.Handlers;
 using Projet_Dotnet_4.Requirements;
 using Projet_Dotnet_4.Services;
 using System.Security.Claims;
 using System.Text;
-using Projet_Dotnet_4.Data;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,7 +23,7 @@ builder.Services.AddSingleton<IAuthorizationHandler, IsITMemberHandler>();
 builder.Services.AddSingleton<IAuthorizationHandler, MinimumAgeHandler>();
 
 
-builder.Services.AddControllers();
+
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -89,8 +89,9 @@ builder.Services.AddAuthentication(
         builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT signing key is not configured.")
     )
 ), // récupérer la clé de chiffrement
-            ClockSkew = TimeSpan.Zero // par défaut c'est 5 minutes. Il s'agit de l'écart de temps autorisé entre l'heure du client et celle du serveur
-
+            ClockSkew = TimeSpan.Zero, // par défaut c'est 5 minutes. Il s'agit de l'écart de temps autorisé entre l'heure du client et celle du serveur
+            RoleClaimType = ClaimTypes.Role,
+            NameClaimType = ClaimTypes.Name
         };
     });
 
@@ -119,7 +120,8 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("AutUsers", policy => policy.RequireAuthenticatedUser());
 
     options.AddPolicy("BobOnly", policy => policy.RequireUserName("Bob"));
-    options.AddPolicy("AdminRole", policy => policy.RequireRole("AdminRole"));
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+
 
     // stratégies complèxes => lambda / handler-Requirements (class)
     options.AddPolicy("BossOrEmail", policy =>
@@ -134,6 +136,7 @@ builder.Services.AddAuthorization(options =>
 
 );
 
+
 var app = builder.Build();
 app.UseCors("Angular");
 // Configure the HTTP request pipeline.
@@ -144,7 +147,30 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
+app.Use(async (context, next) =>
+{
+    Console.WriteLine($"=== Request to: {context.Request.Path}");
+    Console.WriteLine($"=== Has Authorization header: {context.Request.Headers.ContainsKey("Authorization")}");
+    if (context.Request.Headers.ContainsKey("Authorization"))
+    {
+        Console.WriteLine($"=== Authorization value: {context.Request.Headers["Authorization"]}");
+    }
+    await next();
+    Console.WriteLine($"=== Response status: {context.Response.StatusCode}");
+    if (context.User.Identity?.IsAuthenticated == true)
+    {
+        Console.WriteLine($"=== User is authenticated: {context.User.Identity.Name}");
+        Console.WriteLine($"=== User claims:");
+        foreach (var claim in context.User.Claims)
+        {
+            Console.WriteLine($"    {claim.Type}: {claim.Value}");
+        }
+    }
+    else
+    {
+        Console.WriteLine($"=== User is NOT authenticated");
+    }
+});
 // ATTENTION L'ORDRE EST SUPER IMPORTANT
 app.UseAuthentication(); // savoir à qui on a à faire
 app.UseAuthorization(); // savoir ce qu'on peut faire 

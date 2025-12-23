@@ -102,9 +102,24 @@ namespace Project_Dotnet_4_V2.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Number")
+                    b.Property<decimal>("EconomicPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SeatsPerRow")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("StandardPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("TotalRows")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("VipPrice")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -137,6 +152,9 @@ namespace Project_Dotnet_4_V2.Server.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Zone")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
