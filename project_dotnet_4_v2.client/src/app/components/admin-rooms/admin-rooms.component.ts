@@ -11,7 +11,7 @@ export class AdminRoomsComponent implements OnInit {
   errorMessage = '';
   successMessage = '';
 
-  // pour le form
+  
   showForm = false;
   isEditing = false;
   currentRoomId?: number;
@@ -90,7 +90,7 @@ export class AdminRoomsComponent implements OnInit {
     this.successMessage = '';
 
     if (this.isEditing && this.currentRoomId) {
-      // Modification
+      
       this.roomService.updateRoom(this.currentRoomId, this.roomForm).subscribe({
         next: () => {
           this.successMessage = 'Salle modifiée avec succès';
@@ -102,7 +102,7 @@ export class AdminRoomsComponent implements OnInit {
         }
       });
     } else {
-      // Création
+      
       this.roomService.createRoom(this.roomForm).subscribe({
         next: () => {
           this.successMessage = 'Salle créée avec succès';

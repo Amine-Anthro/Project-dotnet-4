@@ -10,5 +10,7 @@ namespace Project_Dotnet_4_V2.Server.Services
         Task<Event> CreateEventAsync(CreateEventDTO eventDto);
         Task UpdateEventAsync(int id, ModifyEventDTO eventDto);
         Task DeleteEventAsync(int id);
+
+
     }
 }

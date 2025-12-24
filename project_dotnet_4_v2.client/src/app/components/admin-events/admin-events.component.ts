@@ -126,7 +126,6 @@ export class AdminEventsComponent implements OnInit {
         }
       });
     } else {
-      // Création
       this.eventService.createEvent(this.eventForm).subscribe({
         next: () => {
           this.successMessage = 'Événement créé avec succès';

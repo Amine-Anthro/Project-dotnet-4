@@ -27,7 +27,7 @@ namespace Projet_Dotnet_4.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginDTO userLogin)
+        public async Task<IActionResult> Login([FromBody] LoginDTO userLogin)
         {
             try
             {
@@ -38,7 +38,7 @@ namespace Projet_Dotnet_4.Controllers
                 }
 
 
-                var user = _userService.GetByUsername(userLogin.Username);
+                var user = await _userService.GetByUsername(userLogin.Username);
 
                 if (user == null)
                 {
@@ -52,11 +52,7 @@ namespace Projet_Dotnet_4.Controllers
                 }
 
                 
-                Claim specialClaim = new Claim("SpecialRole", "None");
-                if (user.Username == "Eric_admin")
-                {
-                    specialClaim = new Claim("SpecialRole", "Boss");
-                }
+                
 
                 
                 var claims = new[]
@@ -65,7 +61,7 @@ namespace Projet_Dotnet_4.Controllers
                     new Claim(ClaimTypes.Name, user.Username),
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim(ClaimTypes.Role, user.Role),
-                    specialClaim
+                   
                 };
 
                 
@@ -87,12 +83,12 @@ namespace Projet_Dotnet_4.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = "Erreur serveur", error = ex.Message });
+                return StatusCode(500, new { message = "Error server", error = ex.Message });
             }
         }
 
         [HttpPost("register")]
-        public IActionResult Register([FromBody] RegisterDTO registerDto)
+        public async Task<IActionResult> Register([FromBody] RegisterDTO registerDto)
         {
             try
             {
@@ -101,18 +97,18 @@ namespace Projet_Dotnet_4.Controllers
                     string.IsNullOrEmpty(registerDto.Password) ||
                     string.IsNullOrEmpty(registerDto.Email))
                 {
-                    return BadRequest(new { message = "Tous les champs sont requis" });
+                    return BadRequest(new { message = "All fields are required" });
                 }
 
                 
-                if (_userService.UsernameExists(registerDto.Username))
+                if (await _userService.UsernameExists(registerDto.Username))
                 {
-                    return BadRequest(new { message = "Ce nom d'utilisateur existe déjà" });
+                    return BadRequest(new { message = "This username already exists" });
                 }
 
-                if (_userService.EmailExists(registerDto.Email))
+                if (await _userService.EmailExists(registerDto.Email))
                 {
-                    return BadRequest(new { message = "Cet email est déjà utilisé" });
+                    return BadRequest(new { message = "This mail already exists" });
                 }
 
                 
@@ -127,11 +123,11 @@ namespace Projet_Dotnet_4.Controllers
 
                 _userService.Create(user);
 
-                return Ok(new { message = "Inscription réussie" });
+                return Ok(new { message = "Sucess Register my homie !" });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = "Erreur serveur", error = ex.Message });
+                return StatusCode(500, new { message = "Error server", error = ex.Message });
             }
         }
     }

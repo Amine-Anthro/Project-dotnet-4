@@ -8,6 +8,7 @@ using Project_Dotnet_4_V2.Server.Repositories.Project_Dotnet_4_V2.Server.Reposit
 using Project_Dotnet_4_V2.Server.Services;
 using Projet_Dotnet_4.Data;
 using Projet_Dotnet_4.Handlers;
+using Projet_Dotnet_4.Repositories;
 using Projet_Dotnet_4.Requirements;
 using Projet_Dotnet_4.Services;
 using System.Security.Claims;
@@ -23,6 +24,10 @@ builder.Services.AddScoped<IRoomRepository, RoomRepository>();
 builder.Services.AddScoped<IRoomService, RoomService>();
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ISeatRepository, SeatRepository>();
+builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
+builder.Services.AddScoped<IReservationService, ReservationService>();
 
 builder.Services.AddSingleton<IAuthorizationHandler, IsAccountNotDisabledHandler>();
 builder.Services.AddSingleton<IAuthorizationHandler, IsAdminHandler>();

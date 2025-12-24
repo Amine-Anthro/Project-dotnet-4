@@ -1,47 +1,39 @@
-﻿using Microsoft.AspNetCore.Mvc.ApplicationModels;
+﻿
+using Project_Dotnet_4_V2.Server.Repositories;
 using Projet_Dotnet_4.Models;
-//using Projet_Dotnet_4.Repositories;
-using Projet_Dotnet_4.Data;
-using Projet_Dotnet_4.DTO.Auth;
 
 namespace Projet_Dotnet_4.Services
 {
     public class UserService : IUserService
     {
 
-        private readonly ApplicationDbContext _context;
+        private readonly IUserRepository _userRepository;
 
-        public UserService(ApplicationDbContext context)
+        public UserService(IUserRepository userRepository)
         {
-            _context = context;
+            _userRepository = userRepository;
         }
 
-        public User? GetByUsername(string username)
+        public async Task<User> Create(User user)
         {
-            return _context.Users.FirstOrDefault(u => u.Username == username);
+            return await _userRepository.CreateAsync(user);
         }
 
-        public bool UsernameExists(string username)
+        public async Task<User?> GetByUsername(string username)
         {
-            return _context.Users.Any(u => u.Username == username);
+            return await _userRepository.GetByUsernameAsync(username);
         }
 
-        public bool EmailExists(string email)
+        public async Task<bool> UsernameExists(string username)
         {
-            return _context.Users.Any(u => u.Email == email);
+            var user = await _userRepository.GetByUsernameAsync(username);
+            return user != null;
         }
 
-        public void Create(User user)
+        public async Task<bool> EmailExists(string email)
         {
-            _context.Users.Add(user);
-            _context.SaveChanges();
-        }
-
-        public User? Get(LoginDTO userLogin)
-        {
-            return _context.Users.FirstOrDefault(
-                u => u.Username.Equals(userLogin.Username, StringComparison.OrdinalIgnoreCase)
-            );
+            var user = await _userRepository.GetByEmailAsync(email);
+            return user != null;
         }
     }
 }

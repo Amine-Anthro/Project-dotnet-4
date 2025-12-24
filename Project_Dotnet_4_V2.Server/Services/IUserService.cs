@@ -5,10 +5,9 @@ namespace Projet_Dotnet_4.Services
 {
     public interface IUserService
     {
-        User GetByUsername(string username);
-        bool UsernameExists(string username);
-        bool EmailExists(string email);
-        void Create(User user);
-        public User Get(LoginDTO userLogin);
+        Task<User> Create(User user);
+        Task<User?> GetByUsername(string username);
+        Task<bool> UsernameExists(string username);
+        Task<bool> EmailExists(string email);
     }
 }

@@ -10,6 +10,7 @@
         public TariffZone Zone { get; set; } = TariffZone.Standard;
         public decimal Price { get; set; }
 
-
+        public int? ReservationId { get; set; }
+        public Reservation? Reservation { get; set; }
     }
 }

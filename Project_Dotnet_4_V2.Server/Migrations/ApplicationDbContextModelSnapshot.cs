@@ -94,6 +94,8 @@ namespace Project_Dotnet_4_V2.Server.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("EventId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("Reservations");
@@ -220,18 +222,26 @@ namespace Project_Dotnet_4_V2.Server.Migrations
 
             modelBuilder.Entity("Projet_Dotnet_4.Models.Reservation", b =>
                 {
+                    b.HasOne("Projet_Dotnet_4.Models.Event", "Event")
+                        .WithMany()
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Projet_Dotnet_4.Models.User", "User")
                         .WithMany("Reservations")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Event");
+
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("Projet_Dotnet_4.Models.Seat", b =>
                 {
-                    b.HasOne("Projet_Dotnet_4.Models.Reservation", null)
+                    b.HasOne("Projet_Dotnet_4.Models.Reservation", "Reservation")
                         .WithMany("Seats")
                         .HasForeignKey("ReservationId");
 
@@ -240,6 +250,8 @@ namespace Project_Dotnet_4_V2.Server.Migrations
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Reservation");
                 });
 
             modelBuilder.Entity("Projet_Dotnet_4.Models.Reservation", b =>
