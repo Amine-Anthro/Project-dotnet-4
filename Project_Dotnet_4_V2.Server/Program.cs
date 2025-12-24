@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Project_Dotnet_4_V2.Server.Repositories;
+using Project_Dotnet_4_V2.Server.Repositories.Project_Dotnet_4_V2.Server.Repositories;
+using Project_Dotnet_4_V2.Server.Services;
 using Projet_Dotnet_4.Data;
 using Projet_Dotnet_4.Handlers;
 using Projet_Dotnet_4.Requirements;
@@ -14,8 +17,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddScoped<IMovieService, MovieService>();
+//builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+builder.Services.AddScoped<IRoomService, RoomService>();
+builder.Services.AddScoped<IEventRepository, EventRepository>();
+builder.Services.AddScoped<IEventService, EventService>();
 
 builder.Services.AddSingleton<IAuthorizationHandler, IsAccountNotDisabledHandler>();
 builder.Services.AddSingleton<IAuthorizationHandler, IsAdminHandler>();

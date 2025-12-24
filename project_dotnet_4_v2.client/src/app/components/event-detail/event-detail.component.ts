@@ -45,7 +45,7 @@ export class EventDetailComponent implements OnInit {
 
     const seatsByRow: { [key: string]: Seat[] } = {};
 
-    this.event.room.seats.forEach(seat => {
+    this.event.room.seats.forEach((seat: Seat) => {
       if (!seatsByRow[seat.row]) {
         seatsByRow[seat.row] = [];
       }

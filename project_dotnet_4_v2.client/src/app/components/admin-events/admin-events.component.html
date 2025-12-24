@@ -1,0 +1,193 @@
+<div class="admin-container">
+  <div class="admin-header">
+    <h1>Gestion des Événements</h1>
+    <button class="btn-primary" (click)="openCreateForm()">
+      + Créer un événement
+    </button>
+  </div>
+
+
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-error">
+    {{ errorMessage }}
+  </div>
+
+ 
+  <div *ngIf="isLoading" class="loading">
+    Chargement des événements...
+  </div>
+
+ 
+  <div *ngIf="!isLoading && !showForm" class="events-grid">
+    <div *ngFor="let event of events" class="event-card">
+      <div class="event-image" *ngIf="event.imageUrl">
+        <img [src]="event.imageUrl" [alt]="event.name">
+      </div>
+
+      <div class="event-content">
+        <div class="event-header">
+          <h3>{{ event.name }}</h3>
+          <span class="price-badge">{{ event.basePrice }}€</span>
+        </div>
+
+        <div class="event-details">
+          <div class="detail-row" *ngIf="event.director">
+            <span>{{ event.director }}</span>
+          </div>
+
+          <div class="detail-row" *ngIf="event.duration">
+            <span>{{ event.duration }} min</span>
+          </div>
+
+          <div class="detail-row" *ngIf="event.genre">
+            <span>{{ event.genre }}</span>
+          </div>
+
+          <div class="detail-row">
+            <span>{{ formatDate(event.date) }}</span>
+          </div>
+
+          <div class="detail-row" *ngIf="event.room">
+            <span>Salle {{ event.room.name }}</span>
+          </div>
+        </div>
+
+        <div class="event-description">
+          <p>{{ event.description }}</p>
+        </div>
+
+        <div class="event-actions">
+          <button class="btn-edit" (click)="openEditForm(event)">
+            Modifier
+          </button>
+          <button class="btn-delete" (click)="deleteEvent(event.id, event.name)">
+            Supprimer
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="events.length === 0" class="empty-state">
+      <p>Aucun événement créé pour le moment.</p>
+      <button class="btn-primary" (click)="openCreateForm()">
+        Créer le premier événement
+      </button>
+    </div>
+  </div>
+
+  
+  <div *ngIf="showForm" class="form-container">
+    <div class="form-card">
+      <div class="form-header">
+        <h2>{{ isEditing ? 'Modifier l\'événement' : 'Créer un nouvel événement' }}</h2>
+        <button class="btn-close" (click)="closeForm()">×</button>
+      </div>
+
+      <form (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label for="name">Nom de l'événement *</label>
+            <input type="text"
+                   id="name"
+                   [(ngModel)]="eventForm.name"
+                   name="name"
+                   placeholder="Ex: La Cité de la Peur"
+                   required>
+          </div>
+
+          <div class="form-group">
+            <label for="date">Date et heure *</label>
+            <input type="datetime-local"
+                   id="date"
+                   [(ngModel)]="eventForm.date"
+                   name="date"
+                   required>
+          </div>
+
+          <div class="form-group">
+            <label for="roomId">Salle *</label>
+            <select id="roomId"
+                    [(ngModel)]="eventForm.roomId"
+                    name="roomId"
+                    required>
+              <option [value]="0" disabled>-- Sélectionner une salle --</option>
+              <option *ngFor="let room of rooms" [value]="room.id">
+                Salle {{ room.name }} ({{ room.capacity }} places)
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="basePrice">Prix de base *</label>
+            <input type="name"
+                   id="basePrice"
+                   [(ngModel)]="eventForm.basePrice"
+                   name="basePrice"
+                   min="0"
+                   step="0.5"
+                   required>
+          </div>
+
+          <div class="form-group">
+            <label for="director">Réalisateur</label>
+            <input type="text"
+                   id="director"
+                   [(ngModel)]="eventForm.director"
+                   name="director"
+                   placeholder="Ex: Alain Berbérian">
+          </div>
+
+          <div class="form-group">
+            <label for="duration">Durée (minutes)</label>
+            <input type="name"
+                   id="duration"
+                   [(ngModel)]="eventForm.duration"
+                   name="duration"
+                   min="1"
+                   placeholder="90">
+          </div>
+
+          <div class="form-group">
+            <label for="genre">Genre</label>
+            <input type="text"
+                   id="genre"
+                   [(ngModel)]="eventForm.genre"
+                   name="genre"
+                   placeholder="Ex: Comédie">
+          </div>
+
+          <div class="form-group full-width">
+            <label for="imageUrl">URL de l'image</label>
+            <input type="url"
+                   id="imageUrl"
+                   [(ngModel)]="eventForm.imageUrl"
+                   name="imageUrl"
+                   placeholder="https://example.com/image.jpg">
+          </div>
+
+          <div class="form-group full-width">
+            <label for="description">Description *</label>
+            <textarea id="description"
+                      [(ngModel)]="eventForm.description"
+                      name="description"
+                      rows="5"
+                      placeholder="Description de l'événement..."
+                      required></textarea>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-cancel" (click)="closeForm()">
+            Annuler
+          </button>
+          <button type="submit" class="btn-submit">
+            {{ isEditing ? 'Enregistrer les modifications' : 'Créer l\'événement' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

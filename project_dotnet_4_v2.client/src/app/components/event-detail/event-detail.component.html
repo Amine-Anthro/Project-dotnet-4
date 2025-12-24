@@ -20,9 +20,9 @@
              class="event-poster">
         <div class="event-details">
           <h1>{{ event.name }}</h1>
-          <p class="event-date">📅 {{ event.date | date:'EEEE dd MMMM yyyy à HH:mm' }}</p>
+          <p class="event-date"> {{ event.date | date:'EEEE dd MMMM yyyy à HH:mm' }}</p>
           <p class="event-description">{{ event.description }}</p>
-          <p class="event-room"> Salle {{ event.room?.number }} - Capacité: {{ event.room?.capacity }} places</p>
+          <p class="event-room"> Salle {{ event.room?.name }} - Capacité: {{ event.room?.capacity }} places</p>
         </div>
       </div>
     </div>

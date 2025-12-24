@@ -1,0 +1,170 @@
+<div class="admin-container">
+  <div class="admin-header">
+    <h1>Gestion des Salles</h1>
+    <button class="btn-primary" (click)="openCreateForm()">
+      + Créer une salle
+    </button>
+  </div>
+
+  
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-error">
+    {{ errorMessage }}
+  </div>
+
+  
+  <div *ngIf="isLoading" class="loading">
+    Chargement des salles...
+  </div>
+
+ 
+  <div *ngIf="!isLoading && !showForm" class="rooms-grid">
+    <div *ngFor="let room of rooms" class="room-card">
+      <div class="room-header">
+        <h3>{{ room.name }}</h3>
+        <span class="capacity-badge">{{ room.capacity }} places</span>
+      </div>
+
+      <div class="room-details">
+        <div class="detail-row">
+          <span class="label">Configuration :</span>
+          <span>{{ room.totalRows }} rangées × {{ room.seatsPerRow }} sièges</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="label">Tarifs :</span>
+          <div class="prices">
+            <span class="price economic">Éco: {{ room.economicPrice }}€</span>
+            <span class="price vip">VIP: {{ room.vipPrice }}€</span>
+            <span class="price standard">Standard: {{ room.standardPrice }}€</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="room-actions">
+        <button class="btn-edit" (click)="openEditForm(room)">
+          Modifier
+        </button>
+        <button class="btn-delete" (click)="deleteRoom(room.id, room.name)">
+          Supprimer
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="rooms.length === 0" class="empty-state">
+      <p>Aucune salle créée pour le moment.</p>
+      <button class="btn-primary" (click)="openCreateForm()">
+        Créer la première salle
+      </button>
+    </div>
+  </div>
+
+  
+  <div *ngIf="showForm" class="form-container">
+    <div class="form-card">
+      <div class="form-header">
+        <h2>{{ isEditing ? 'Modifier la salle' : 'Créer une nouvelle salle' }}</h2>
+        <button class="btn-close" (click)="closeForm()">×</button>
+      </div>
+
+      <form (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="number">Nom de salle *</label>
+            <input type="text"
+                   id="number"
+                   [(ngModel)]="roomForm.name"
+                   name="number"
+                   placeholder="Ex: Salle 1"
+                   required>
+          </div>
+
+          <div class="form-group">
+            <label for="capacity">Capacité totale</label>
+            <input type="text"
+                   id="capacity"
+                   [(ngModel)]="roomForm.capacity"
+                   name="capacity"
+                   placeholder="Ex: 100"
+                   required>
+          </div>
+
+          <div class="form-group">
+            <label for="totalRows">Nombre de rangées *</label>
+            <input type="number"
+                   id="totalRows"
+                   [(ngModel)]="roomForm.totalRows"
+                   name="totalRows"
+                   min="1"
+                   max="26"
+                   required>
+          </div>
+
+          <div class="form-group">
+            <label for="seatsPerRow">Sièges par rangée *</label>
+            <input type="number"
+                   id="seatsPerRow"
+                   [(ngModel)]="roomForm.seatsPerRow"
+                   name="seatsPerRow"
+                   min="1"
+                   required>
+          </div>
+        </div>
+
+        <h3 class="section-title">Tarifs par zone</h3>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="economicPrice">Prix Économique *</label>
+            <input type="number"
+                   id="economicPrice"
+                   [(ngModel)]="roomForm.economicPrice"
+                   name="economicPrice"
+                   min="0"
+                   step="0.5"
+                   required>
+          </div>
+
+          <div class="form-group">
+            <label for="vipPrice">Prix VIP *</label>
+            <input type="number"
+                   id="vipPrice"
+                   [(ngModel)]="roomForm.vipPrice"
+                   name="vipPrice"
+                   min="0"
+                   step="0.5"
+                   required>
+          </div>
+
+          <div class="form-group">
+            <label for="standardPrice">Prix Standard *</label>
+            <input type="number"
+                   id="standardPrice"
+                   [(ngModel)]="roomForm.standardPrice"
+                   name="standardPrice"
+                   min="0"
+                   step="0.5"
+                   required>
+          </div>
+        </div>
+
+        <div class="form-info">
+          <p><strong>Note :</strong> Les sièges seront générés automatiquement selon la configuration choisie.</p>
+          <p>Répartition : Premier tiers = Économique, Milieu = VIP, Dernier tiers = Standard</p>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-cancel" (click)="closeForm()">
+            Annuler
+          </button>
+          <button type="submit" class="btn-submit">
+            {{ isEditing ? 'Enregistrer les modifications' : 'Créer la salle' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

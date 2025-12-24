@@ -9,6 +9,9 @@ import { Register } from './components/register/register.component';
 import { Home } from './components/home/home.component';
 import { RouterModule } from '@angular/router';
 import { EventDetailComponent } from './components/event-detail/event-detail.component';
+import { adminGuard } from './guards/admin.guard';
+import { AdminRoomsComponent } from './components/admin-rooms/admin-rooms.component';
+import { AdminEventsComponent } from './components/admin-events/admin-events.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +19,9 @@ import { EventDetailComponent } from './components/event-detail/event-detail.com
     Login,
     Register,
     Home,
-    EventDetailComponent
+    EventDetailComponent,
+    AdminRoomsComponent,
+    AdminEventsComponent
   ],
   imports: [
     BrowserModule,
@@ -28,8 +33,9 @@ import { EventDetailComponent } from './components/event-detail/event-detail.com
       { path: 'register', component: Register },
       { path: 'home', component: Home },
       { path: 'event/:id', component: EventDetailComponent },
+      { path: 'admin/rooms', component: AdminRoomsComponent, canActivate: [adminGuard] },
+      { path: 'admin/events', component: AdminEventsComponent, canActivate: [adminGuard] },
       { path: '**', redirectTo: '/login' }
-
     ])
   ],
   providers: [],
