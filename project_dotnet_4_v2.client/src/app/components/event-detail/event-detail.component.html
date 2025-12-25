@@ -12,27 +12,23 @@
         <h1>{{ event.name }}</h1>
 
         <div class="detail-item">
-          <span class="icon">🎬</span>
           <span>{{ event.director }}</span>
         </div>
 
         <div class="detail-item" *ngIf="event.duration">
-          <span class="icon">⏱️</span>
+          <span class="icon"></span>
           <span>{{ event.duration }} min</span>
         </div>
 
-        <div class="detail-item" *ngIf="event.genre">
-          <span class="icon">🎭</span>
+        <div class="detail-item" *ngIf="event.genre">         
           <span>{{ event.genre }}</span>
         </div>
 
         <div class="detail-item">
-          <span class="icon">📅</span>
           <span>{{ event.date | date:'dd/MM/yyyy HH:mm' }}</span>
         </div>
 
         <div class="detail-item" *ngIf="event.room">
-          <span class="icon">🏛️</span>
           <span>Salle {{ event.room.name }} - {{ event.room.capacity }} places</span>
         </div>
 

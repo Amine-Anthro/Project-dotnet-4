@@ -12,6 +12,8 @@ import { EventDetailComponent } from './components/event-detail/event-detail.com
 import { adminGuard } from './guards/admin.guard';
 import { AdminRoomsComponent } from './components/admin-rooms/admin-rooms.component';
 import { AdminEventsComponent } from './components/admin-events/admin-events.component';
+import { PaymentComponent } from './components/payment/payment.component';
+import { MyReservationsComponent } from './components/my-reservations/my-reservations.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { AdminEventsComponent } from './components/admin-events/admin-events.com
     Home,
     EventDetailComponent,
     AdminRoomsComponent,
-    AdminEventsComponent
+    AdminEventsComponent,
+    PaymentComponent,
+    MyReservationsComponent
   ],
   imports: [
     BrowserModule,
@@ -33,6 +37,8 @@ import { AdminEventsComponent } from './components/admin-events/admin-events.com
       { path: 'register', component: Register },
       { path: 'home', component: Home },
       { path: 'event/:id', component: EventDetailComponent },
+      { path: 'payment/:id', component: PaymentComponent }, 
+      { path: 'my-reservations', component: MyReservationsComponent },
       { path: 'admin/rooms', component: AdminRoomsComponent, canActivate: [adminGuard] },
       { path: 'admin/events', component: AdminEventsComponent, canActivate: [adminGuard] },
       { path: '**', redirectTo: '/login' }
