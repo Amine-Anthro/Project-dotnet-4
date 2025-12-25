@@ -34,9 +34,10 @@ export interface Seat {
   number: string;
   row: string;
   roomId: number;
-  status: string;
-  zone: number; 
+  status: number;
+  zone: number;
   price: number;
+  reservationId?: number;
 }
 
 export interface CreateEventDTO {
