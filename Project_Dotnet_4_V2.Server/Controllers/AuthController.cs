@@ -1,15 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using Projet_Dotnet_4.Models;
-using Projet_Dotnet_4.Services;
+using Project_Dotnet_4_V2.Models;
+using Project_Dotnet_4_V2.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using BCrypt.Net;
-using Projet_Dotnet_4.DTO.Auth;
-using Projet_Dotnet_4.Data;
+using Project_Dotnet_4_V2.DTO.Auth;
+using Project_Dotnet_4_V2.Data;
 
-namespace Projet_Dotnet_4.Controllers
+namespace Project_Dotnet_4_V2.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

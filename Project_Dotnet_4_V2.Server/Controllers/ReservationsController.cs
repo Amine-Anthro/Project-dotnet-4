@@ -1,21 +1,22 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project_Dotnet_4_V2.Server.Services;
-using Projet_Dotnet_4.DTO.Reservations;
-using Projet_Dotnet_4.Models;
+using Project_Dotnet_4_V2.DTO.Reservations;
+using Project_Dotnet_4_V2.Models;
 using System.Security.Claims;
 
-namespace Projet_Dotnet_4.Controllers
+namespace Project_Dotnet_4_V2.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class ReservationsController : ControllerBase
     {
         private readonly IReservationService _reservationService;
-
-        public ReservationsController(IReservationService reservationService)
+        private readonly ITicketService _ticketService;
+        public ReservationsController(IReservationService reservationService, ITicketService ticketService)
         {
             _reservationService = reservationService;
+            _ticketService = ticketService;
         }
 
         /// <summary>
@@ -189,6 +190,78 @@ namespace Projet_Dotnet_4.Controllers
             catch (InvalidOperationException ex)
             {
                 return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Télécharger le billet PDF
+        /// </summary>
+        [Authorize]
+        [HttpGet("{id}/ticket/pdf")]
+        public async Task<IActionResult> DownloadTicketPdf(int id)
+        {
+            try
+            {
+                var reservation = await _reservationService.GetReservationByIdAsync(id);
+
+                if (reservation == null)
+                    return NotFound(new { message = "Reservation not found" });
+
+                // Vérifier que l'utilisateur est propriétaire ou admin
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
+
+                if (!int.TryParse(userIdClaim, out int userId))
+                    return Unauthorized();
+
+                if (reservation.UserId != userId && userRole != "Admin")
+                    return Forbid();
+
+                var pdfBytes = await _ticketService.GenerateTicketPdfAsync(id);
+
+                return File(pdfBytes, "application/pdf", $"Ticket-Reservation-{id}.pdf");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Obtenir le QR code en base64
+        /// </summary>
+        [Authorize]
+        [HttpGet("{id}/ticket/qrcode")]
+        public async Task<IActionResult> GetQRCode(int id)
+        {
+            try
+            {
+                var reservation = await _reservationService.GetReservationByIdAsync(id);
+
+                if (reservation == null)
+                    return NotFound(new { message = "Reservation not found" });
+
+                // Vérifier que l'utilisateur est propriétaire ou admin
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
+
+                if (!int.TryParse(userIdClaim, out int userId))
+                    return Unauthorized();
+
+                if (reservation.UserId != userId && userRole != "Admin")
+                    return Forbid();
+
+                var qrCodeBase64 = _ticketService.GenerateQRCode(id);
+
+                return Ok(new { qrCode = qrCodeBase64 });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Error generating QR code", error = ex.Message });
             }
         }
     }

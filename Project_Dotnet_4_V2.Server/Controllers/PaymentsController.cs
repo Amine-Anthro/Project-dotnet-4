@@ -1,4 +1,4 @@
-﻿namespace Projet_Dotnet_4.Controllers
+﻿namespace Project_Dotnet_4_V2.Controllers
 {
     public class PaymentsController
     {

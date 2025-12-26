@@ -70,4 +70,17 @@ export class ReservationService {
   cancelReservation(reservationId: number): Observable<any> {
     return this.http.post(`${this.apiUrl}/${reservationId}/cancel`, {}, { headers: this.getHeaders() });
   }
+
+  downloadTicketPdf(reservationId: number): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/${reservationId}/ticket/pdf`, {
+      headers: this.getHeaders(),
+      responseType: 'blob' // Important pour télécharger un fichier
+    });
+  }
+
+  getQRCode(reservationId: number): Observable<{ qrCode: string }> {
+    return this.http.get<{ qrCode: string }>(`${this.apiUrl}/${reservationId}/ticket/qrcode`, {
+      headers: this.getHeaders()
+    });
+  }
 }

@@ -1,6 +1,6 @@
-﻿using Projet_Dotnet_4.Models;
+﻿using Project_Dotnet_4_V2.Models;
 
-namespace Projet_Dotnet_4.DTO.Reservations
+namespace Project_Dotnet_4_V2.DTO.Reservations
 {
     public class CreateReservationDTO
     {

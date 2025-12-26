@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Projet_Dotnet_4.Data;
-using Projet_Dotnet_4.Models;
+using Project_Dotnet_4_V2.Data;
+using Project_Dotnet_4_V2.Models;
 
 namespace Project_Dotnet_4_V2.Server.Repositories
 {
@@ -35,7 +35,10 @@ namespace Project_Dotnet_4_V2.Server.Repositories
 
         public async Task<IEnumerable<Reservation>> GetAllAsync()
         {
-           return await _context.Reservations.Include(r => r.User).Include(r => r.Seats).ToListAsync();
+           return await _context.Reservations
+                .Include(r => r.User)
+                .Include(r => r.Seats)
+                .ToListAsync();
         }
 
         public async Task UpdateAsync(Reservation reservation)

@@ -129,4 +129,96 @@ export class MyReservationsComponent implements OnInit {
       minute: '2-digit'
     });
   }
+
+  downloadingTickets: Set<number> = new Set(); // Pour tracker les téléchargements en cours
+
+  downloadTicket(reservationId: number): void {
+    this.downloadingTickets.add(reservationId);
+
+    this.reservationService.downloadTicketPdf(reservationId).subscribe({
+      next: (blob) => {
+        // Créer un lien de téléchargement
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `Ticket-Reservation-${reservationId}.pdf`;
+        link.click();
+
+        // Nettoyer
+        window.URL.revokeObjectURL(url);
+        this.downloadingTickets.delete(reservationId);
+
+        this.successMessage = 'Billet téléchargé avec succès !';
+        setTimeout(() => {
+          this.successMessage = '';
+        }, 3000);
+      },
+      error: (error) => {
+        console.error('Erreur lors du téléchargement', error);
+        this.errorMessage = 'Erreur lors du téléchargement du billet';
+        this.downloadingTickets.delete(reservationId);
+      }
+    });
+  }
+
+  viewQRCode(reservationId: number): void {
+    this.reservationService.getQRCode(reservationId).subscribe({
+      next: (response) => {
+        // Afficher le QR code dans une modal
+        this.showQRCodeModal(response.qrCode, reservationId);
+      },
+      error: (error) => {
+        console.error('Erreur lors de la récupération du QR code', error);
+        this.errorMessage = 'Erreur lors de la récupération du QR code';
+      }
+    });
+  }
+
+  showQRCodeModal(qrCodeBase64: string, reservationId: number): void {
+    // Simple alert avec image (pour commencer)
+    // On va créer une vraie modal après
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+    `;
+
+    modal.innerHTML = `
+      <div style="background: white; padding: 2rem; border-radius: 12px; text-align: center; max-width: 400px;">
+        <h3 style="margin: 0 0 1rem 0;">QR Code - Réservation #${reservationId}</h3>
+        <img src="data:image/png;base64,${qrCodeBase64}" style="width: 250px; height: 250px;" />
+        <p style="margin: 1rem 0; color: #666;">Présentez ce QR code à l'entrée</p>
+        <button id="closeModal" style="
+          padding: 0.75rem 2rem;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-weight: 600;
+          cursor: pointer;
+        ">Fermer</button>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Fermer au clic
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal || (e.target as HTMLElement).id === 'closeModal') {
+        document.body.removeChild(modal);
+      }
+    });
+  }
+
+  isDownloading(reservationId: number): boolean {
+    return this.downloadingTickets.has(reservationId);
+  }
 }

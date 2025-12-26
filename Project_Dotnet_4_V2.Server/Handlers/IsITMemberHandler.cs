@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Projet_Dotnet_4.Requirements;
+using Project_Dotnet_4_V2.Requirements;
 
-namespace Projet_Dotnet_4.Handlers
+namespace Project_Dotnet_4_V2.Handlers
 {
     public class IsITMemberHandler : AuthorizationHandler<IsAllowedToManageMovieRequirement>
     {

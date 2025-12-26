@@ -1,5 +1,5 @@
-﻿using Projet_Dotnet_4.DTO.Events;
-using Projet_Dotnet_4.Models;
+﻿using Project_Dotnet_4_V2.DTO.Events;
+using Project_Dotnet_4_V2.Models;
 
 namespace Project_Dotnet_4_V2.Server.Services
 {

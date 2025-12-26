@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Projet_Dotnet_4.Models;
+using Project_Dotnet_4_V2.Models;
 
-namespace Projet_Dotnet_4.Data
+namespace Project_Dotnet_4_V2.Data
 {
     public class ApplicationDbContext : DbContext
     {

@@ -1,4 +1,4 @@
-﻿namespace Projet_Dotnet_4.DTO.Events
+﻿namespace Project_Dotnet_4_V2.DTO.Events
 {
     public class ModifyEventDTO
     {

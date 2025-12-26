@@ -1,8 +1,8 @@
 ﻿using Project_Dotnet_4_V2.Server.DTO.Rooms;
 using Project_Dotnet_4_V2.Server.Repositories;
-using Projet_Dotnet_4.Data;
-using Projet_Dotnet_4.DTO.Rooms;
-using Projet_Dotnet_4.Models;
+using Project_Dotnet_4_V2.Data;
+using Project_Dotnet_4_V2.DTO.Rooms;
+using Project_Dotnet_4_V2.Models;
 
 namespace Project_Dotnet_4_V2.Server.Services
 {

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Projet_Dotnet_4.Data;
+using Project_Dotnet_4_V2.Data;
 
 #nullable disable
 
@@ -22,7 +22,7 @@ namespace Project_Dotnet_4_V2.Server.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Projet_Dotnet_4.Models.Event", b =>
+            modelBuilder.Entity("Project_Dotnet_4_V2.Models.Event", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -66,7 +66,7 @@ namespace Project_Dotnet_4_V2.Server.Migrations
                     b.ToTable("Events");
                 });
 
-            modelBuilder.Entity("Projet_Dotnet_4.Models.Reservation", b =>
+            modelBuilder.Entity("Project_Dotnet_4_V2.Models.Reservation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -101,7 +101,7 @@ namespace Project_Dotnet_4_V2.Server.Migrations
                     b.ToTable("Reservations");
                 });
 
-            modelBuilder.Entity("Projet_Dotnet_4.Models.Room", b =>
+            modelBuilder.Entity("Project_Dotnet_4_V2.Models.Room", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -137,7 +137,7 @@ namespace Project_Dotnet_4_V2.Server.Migrations
                     b.ToTable("Rooms");
                 });
 
-            modelBuilder.Entity("Projet_Dotnet_4.Models.Seat", b =>
+            modelBuilder.Entity("Project_Dotnet_4_V2.Models.Seat", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -177,7 +177,7 @@ namespace Project_Dotnet_4_V2.Server.Migrations
                     b.ToTable("Seats");
                 });
 
-            modelBuilder.Entity("Projet_Dotnet_4.Models.User", b =>
+            modelBuilder.Entity("Project_Dotnet_4_V2.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -209,9 +209,9 @@ namespace Project_Dotnet_4_V2.Server.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Projet_Dotnet_4.Models.Event", b =>
+            modelBuilder.Entity("Project_Dotnet_4_V2.Models.Event", b =>
                 {
-                    b.HasOne("Projet_Dotnet_4.Models.Room", "Room")
+                    b.HasOne("Project_Dotnet_4_V2.Models.Room", "Room")
                         .WithMany("Events")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -220,15 +220,15 @@ namespace Project_Dotnet_4_V2.Server.Migrations
                     b.Navigation("Room");
                 });
 
-            modelBuilder.Entity("Projet_Dotnet_4.Models.Reservation", b =>
+            modelBuilder.Entity("Project_Dotnet_4_V2.Models.Reservation", b =>
                 {
-                    b.HasOne("Projet_Dotnet_4.Models.Event", "Event")
+                    b.HasOne("Project_Dotnet_4_V2.Models.Event", "Event")
                         .WithMany()
                         .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Projet_Dotnet_4.Models.User", "User")
+                    b.HasOne("Project_Dotnet_4_V2.Models.User", "User")
                         .WithMany("Reservations")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -239,13 +239,13 @@ namespace Project_Dotnet_4_V2.Server.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Projet_Dotnet_4.Models.Seat", b =>
+            modelBuilder.Entity("Project_Dotnet_4_V2.Models.Seat", b =>
                 {
-                    b.HasOne("Projet_Dotnet_4.Models.Reservation", "Reservation")
+                    b.HasOne("Project_Dotnet_4_V2.Models.Reservation", "Reservation")
                         .WithMany("Seats")
                         .HasForeignKey("ReservationId");
 
-                    b.HasOne("Projet_Dotnet_4.Models.Room", null)
+                    b.HasOne("Project_Dotnet_4_V2.Models.Room", null)
                         .WithMany("Seats")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -254,19 +254,19 @@ namespace Project_Dotnet_4_V2.Server.Migrations
                     b.Navigation("Reservation");
                 });
 
-            modelBuilder.Entity("Projet_Dotnet_4.Models.Reservation", b =>
+            modelBuilder.Entity("Project_Dotnet_4_V2.Models.Reservation", b =>
                 {
                     b.Navigation("Seats");
                 });
 
-            modelBuilder.Entity("Projet_Dotnet_4.Models.Room", b =>
+            modelBuilder.Entity("Project_Dotnet_4_V2.Models.Room", b =>
                 {
                     b.Navigation("Events");
 
                     b.Navigation("Seats");
                 });
 
-            modelBuilder.Entity("Projet_Dotnet_4.Models.User", b =>
+            modelBuilder.Entity("Project_Dotnet_4_V2.Models.User", b =>
                 {
                     b.Navigation("Reservations");
                 });

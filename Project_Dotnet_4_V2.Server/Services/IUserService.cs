@@ -1,7 +1,7 @@
-﻿using Projet_Dotnet_4.DTO.Auth;
-using Projet_Dotnet_4.Models;
+﻿using Project_Dotnet_4_V2.DTO.Auth;
+using Project_Dotnet_4_V2.Models;
 
-namespace Projet_Dotnet_4.Services
+namespace Project_Dotnet_4_V2.Services
 {
     public interface IUserService
     {

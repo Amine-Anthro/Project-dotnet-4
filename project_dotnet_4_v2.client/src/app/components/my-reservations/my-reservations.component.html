@@ -78,11 +78,20 @@
           Annuler
         </button>
 
-        <button *ngIf="isPaid(reservation)" class="btn-ticket"
-                class="btn-ticket"
-                disabled>
-           Télécharger le billet (bientôt)
-        </button>
+        <button 
+    *ngIf="isPaid(reservation)"
+    class="btn-ticket"
+    (click)="downloadTicket(reservation.id)"
+    [disabled]="isDownloading(reservation.id)">
+    {{ isDownloading(reservation.id) ? ' Téléchargement...' : ' Télécharger le PDF' }}
+  </button>
+
+  <button 
+    *ngIf="isPaid(reservation)"
+    class="btn-qrcode"
+    (click)="viewQRCode(reservation.id)">
+     Voir le QR Code
+  </button>
       </div>
     </div>
 
@@ -96,4 +105,5 @@
       </button>
     </div>
   </div>
+
 </div>

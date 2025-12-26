@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Project_Dotnet_4_V2.Server.DTO.Rooms;
 using Project_Dotnet_4_V2.Server.Services;
-using Projet_Dotnet_4.DTO.Rooms;
-using Projet_Dotnet_4.Models;
+using Project_Dotnet_4_V2.DTO.Rooms;
+using Project_Dotnet_4_V2.Models;
 
 [Route("api/[controller]")]
 [ApiController]

@@ -2,11 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Project_Dotnet_4_V2.Server.Services;
-using Projet_Dotnet_4.Data;
-using Projet_Dotnet_4.DTO.Events;
-using Projet_Dotnet_4.Models;
+using Project_Dotnet_4_V2.Data;
+using Project_Dotnet_4_V2.DTO.Events;
+using Project_Dotnet_4_V2.Models;
 
-namespace Projet_Dotnet_4.Controllers
+namespace Project_Dotnet_4_V2.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

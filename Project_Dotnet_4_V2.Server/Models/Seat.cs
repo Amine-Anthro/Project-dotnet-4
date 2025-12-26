@@ -1,4 +1,4 @@
-﻿namespace Projet_Dotnet_4.Models
+﻿namespace Project_Dotnet_4_V2.Models
 {
     public class Seat
     {
