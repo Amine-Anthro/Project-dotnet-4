@@ -29,6 +29,8 @@ namespace Project_Dotnet_4_V2.Server.Repositories
         {
             return await _context.Reservations
                 .Include(r => r.User)
+                .Include(r => r.Event)
+                 .ThenInclude(e => e.Room)
                 .Include(r => r.Seats)
                 .FirstOrDefaultAsync(r => r.Id == id);
         }
@@ -37,6 +39,8 @@ namespace Project_Dotnet_4_V2.Server.Repositories
         {
            return await _context.Reservations
                 .Include(r => r.User)
+                .Include(r => r.Event)
+                 .ThenInclude(e => e.Room)
                 .Include(r => r.Seats)
                 .ToListAsync();
         }
@@ -49,7 +53,10 @@ namespace Project_Dotnet_4_V2.Server.Repositories
 
         public async Task<IEnumerable<Reservation>> GetAllByUserIdAsync(int userId)
         {
-            return await _context.Reservations.Include(r => r.User).Include(r => r.Seats).Where(r => r.UserId == userId).ToListAsync();
+            return await _context.Reservations
+                .Include(r => r.User)
+                .Include(r => r.Seats)
+                .Where(r => r.UserId == userId).ToListAsync();
         }
     }
 }

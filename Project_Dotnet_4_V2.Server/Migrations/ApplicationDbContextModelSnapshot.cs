@@ -83,6 +83,9 @@ namespace Project_Dotnet_4_V2.Server.Migrations
                     b.Property<DateTime?>("ExpiresAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("RoomId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -95,6 +98,8 @@ namespace Project_Dotnet_4_V2.Server.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("EventId");
+
+                    b.HasIndex("RoomId");
 
                     b.HasIndex("UserId");
 
@@ -228,6 +233,10 @@ namespace Project_Dotnet_4_V2.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Project_Dotnet_4_V2.Models.Room", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomId");
+
                     b.HasOne("Project_Dotnet_4_V2.Models.User", "User")
                         .WithMany("Reservations")
                         .HasForeignKey("UserId")
@@ -235,6 +244,8 @@ namespace Project_Dotnet_4_V2.Server.Migrations
                         .IsRequired();
 
                     b.Navigation("Event");
+
+                    b.Navigation("Room");
 
                     b.Navigation("User");
                 });
