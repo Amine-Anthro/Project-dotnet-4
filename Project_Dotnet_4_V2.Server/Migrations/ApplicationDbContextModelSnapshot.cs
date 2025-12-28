@@ -66,6 +66,48 @@ namespace Project_Dotnet_4_V2.Server.Migrations
                     b.ToTable("Events");
                 });
 
+            modelBuilder.Entity("Project_Dotnet_4_V2.Models.Payment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PaymentMethod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reference")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ReservationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TransactionId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReservationId")
+                        .IsUnique();
+
+                    b.ToTable("Payments");
+                });
+
             modelBuilder.Entity("Project_Dotnet_4_V2.Models.Reservation", b =>
                 {
                     b.Property<int>("Id")
@@ -225,6 +267,17 @@ namespace Project_Dotnet_4_V2.Server.Migrations
                     b.Navigation("Room");
                 });
 
+            modelBuilder.Entity("Project_Dotnet_4_V2.Models.Payment", b =>
+                {
+                    b.HasOne("Project_Dotnet_4_V2.Models.Reservation", "Reservation")
+                        .WithOne("Payment")
+                        .HasForeignKey("Project_Dotnet_4_V2.Models.Payment", "ReservationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Reservation");
+                });
+
             modelBuilder.Entity("Project_Dotnet_4_V2.Models.Reservation", b =>
                 {
                     b.HasOne("Project_Dotnet_4_V2.Models.Event", "Event")
@@ -267,6 +320,8 @@ namespace Project_Dotnet_4_V2.Server.Migrations
 
             modelBuilder.Entity("Project_Dotnet_4_V2.Models.Reservation", b =>
                 {
+                    b.Navigation("Payment");
+
                     b.Navigation("Seats");
                 });
 

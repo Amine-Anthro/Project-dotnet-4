@@ -1,28 +1,51 @@
-﻿using QRCoder;
+﻿using Microsoft.EntityFrameworkCore;
+using Project_Dotnet_4_V2.Data;
+using Project_Dotnet_4_V2.Models;
+using Project_Dotnet_4_V2.Server.Repositories;
+using QRCoder;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
-using Project_Dotnet_4_V2.Server.Repositories;
-using Project_Dotnet_4_V2.Models;
-
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Text.Json;
 
 namespace Project_Dotnet_4_V2.Server.Services
 {
     public class TicketService : ITicketService
     {
         private readonly IReservationRepository _reservationRepository;
+        
 
         public TicketService(IReservationRepository reservationRepository) 
         {
             _reservationRepository = reservationRepository;
+          
             // Licence QuestPDF 
             QuestPDF.Settings.License = LicenseType.Community;
         }
-        public string GenerateQRCode(int reservationId)
+        public async Task<string> GenerateQRCodeAsync(int reservationId)
         {
-            string qrContent = $"https://cinepolis.com/verify/{reservationId}";
+            var reservation = await _reservationRepository.GetByIdAsync(reservationId);
+
+            if (reservation == null)
+                return string.Empty;
+
+            // Version JSON structurée
+            var qrData = new
+            {
+                Type = "MisterTicket",
+                ReservationId = reservation.Id,
+                PaymentRef = reservation.Payment?.Reference ?? "N/A",
+                Amount = reservation.TotalAmount,
+                Customer = reservation.User?.Username,
+                Event = reservation.Event?.Name,
+                Date = reservation.Event?.Date.ToString("yyyy-MM-dd HH:mm"),
+                Seats = reservation.Seats.Select(s => $"{s.Row}{s.Number}").ToList()
+            };
+
+            string qrContent = JsonSerializer.Serialize(qrData);
+
             using (QRCodeGenerator qrCodeGenerator = new QRCodeGenerator())
             {
                 QRCodeData qRCodeData = qrCodeGenerator.CreateQrCode(qrContent, QRCodeGenerator.ECCLevel.Q);
@@ -49,8 +72,12 @@ namespace Project_Dotnet_4_V2.Server.Services
             {
                 throw new InvalidOperationException("Only paid reservations can get pdf tickets");
             }
-            string qrCodeBase64 = GenerateQRCode(reservationId);
+
+
+
+            string qrCodeBase64 = await GenerateQRCodeAsync(reservationId);
             byte[] qrCodeBytes = Convert.FromBase64String(qrCodeBase64);
+
 
             // Créer le PDF
             var document = Document.Create(container =>
@@ -80,6 +107,13 @@ namespace Project_Dotnet_4_V2.Server.Services
                             col.Item().Text($"Reservation #{reservation.Id}")
                                 .FontSize(18)
                                 .Bold();
+
+                            if (reservation.Payment != null)
+                            {
+                                col.Item().PaddingTop(5).Text($"Reference : {reservation.Payment.Reference}")
+                                    .FontSize(12)
+                                    .FontColor(Colors.Blue.Darken2);
+                            }
 
                             col.Item().PaddingTop(10).LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
 
@@ -142,6 +176,13 @@ namespace Project_Dotnet_4_V2.Server.Services
                                 .Bold()
                                 .FontColor(Colors.Blue.Darken3);
 
+                            if (reservation.Payment != null)
+                            {
+                                col.Item().PaddingTop(5).AlignRight().Text($"Payment : {reservation.Payment.Reference}")
+                                    .FontSize(12)
+                                    .FontColor(Colors.Grey.Darken1);
+                            }
+
                             col.Item().PaddingTop(30).LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
 
                            
@@ -151,7 +192,7 @@ namespace Project_Dotnet_4_V2.Server.Services
                         .AlignCenter()
                         .Text(x =>
                         {
-                            x.Span("Generated the ");
+                            x.Span("Generated at ");
                             x.Span(DateTime.Now.ToString("dd/MM/yyyy à HH:mm")).Bold();
                             x.Span(" - Cinepolis © 2025");
                         });

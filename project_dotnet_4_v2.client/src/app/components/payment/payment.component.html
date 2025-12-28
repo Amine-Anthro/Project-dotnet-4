@@ -34,7 +34,7 @@
           </div>
 
           <div class="info-row" *ngIf="reservation.expiresAt && reservation.status === 'InProgress'">
-            <span class="label">⏱️ Temps restant</span>
+            <span class="label">⏱ Temps restant</span>
             <span class="value expires">{{ formatExpiresAt(reservation.expiresAt) }}</span>
           </div>
 
@@ -69,105 +69,69 @@
       </div>
     </div>
 
-    <div class="payment-form" *ngIf="isInProgress()">
-      <h2>Paiement</h2>
 
-      <div class="payment-methods">
-        <label class="payment-method" [class.active]="paymentMethod === 'card'">
-          <input type="radio" name="paymentMethod" value="card" [(ngModel)]="paymentMethod">
+      <div class="payment-form" *ngIf="isInProgress()">
+        <h2>Paiement par carte bancaire</h2>
 
-          <span>Carte bancaire</span>
-        </label>
-
-        <label class="payment-method" [class.active]="paymentMethod === 'paypal'">
-          <input type="radio" name="paymentMethod" value="paypal" [(ngModel)]="paymentMethod">
-
-          <span>PayPal</span>
-        </label>
-
-        <label class="payment-method" [class.active]="paymentMethod === 'crypto'">
-          <input type="radio" name="paymentMethod" value="crypto" [(ngModel)]="paymentMethod">
-
-          <span>Crypto</span>
-        </label>
-      </div>
-
-
-      <form *ngIf="paymentMethod === 'card'" class="card-form">
-        <div class="form-group">
-          <label for="cardNumber">Numéro de carte</label>
-          <input type="text"
-                 id="cardNumber"
-                 [(ngModel)]="cardNumber"
-                 name="cardNumber"
-                 placeholder="1234 5678 9012 3456"
-                 maxlength="16"
-                 pattern="[0-9]*">
-          <small>Utilisez : 1234567890123456 (carte de test)</small>
-        </div>
-
-        <div class="form-group">
-          <label for="cardName">Nom du titulaire</label>
-          <input type="text"
-                 id="cardName"
-                 [(ngModel)]="cardName"
-                 name="cardName"
-                 placeholder="JEAN DUPONT">
-        </div>
-
-        <div class="form-row">
+        <form class="card-form">
           <div class="form-group">
-            <label for="cardExpiry">Date d'expiration</label>
+            <label for="cardNumber">Numéro de carte</label>
             <input type="text"
-                   id="cardExpiry"
-                   [(ngModel)]="cardExpiry"
-                   name="cardExpiry"
-                   placeholder="MM/YY"
-                   maxlength="5">
-          </div>
-
-          <div class="form-group">
-            <label for="cardCVV">CVV</label>
-            <input type="text"
-                   id="cardCVV"
-                   [(ngModel)]="cardCVV"
-                   name="cardCVV"
-                   placeholder="123"
-                   maxlength="3"
+                   id="cardNumber"
+                   [(ngModel)]="cardNumber"
+                   name="cardNumber"
+                   placeholder="1234 5678 9012 3456"
+                   maxlength="16"
                    pattern="[0-9]*">
+            <small>Utilisez : 1234567890123456 (carte de test)</small>
           </div>
+
+          <div class="form-group">
+            <label for="cardName">Nom du titulaire</label>
+            <input type="text"
+                   id="cardName"
+                   [(ngModel)]="cardName"
+                   name="cardName"
+                   placeholder="JEAN DUPONT">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="cardExpiry">Date d'expiration</label>
+              <input type="text"
+                     id="cardExpiry"
+                     [(ngModel)]="cardExpiry"
+                     name="cardExpiry"
+                     placeholder="MM/YY"
+                     maxlength="5">
+            </div>
+
+            <div class="form-group">
+              <label for="cardCVV">CVV</label>
+              <input type="text"
+                     id="cardCVV"
+                     [(ngModel)]="cardCVV"
+                     name="cardCVV"
+                     placeholder="123"
+                     maxlength="3"
+                     pattern="[0-9]*">
+            </div>
+          </div>
+        </form>
+
+        <div class="action-buttons">
+          <button class="btn-cancel"
+                  (click)="cancelReservation()"
+                  [disabled]="isProcessing">
+            Annuler la réservation
+          </button>
+
+          <button class="btn-pay"
+                  (click)="processPayment()"
+                  [disabled]="isProcessing">
+            {{ isProcessing ? 'Traitement...' : 'Payer ' + reservation.totalAmount.toFixed(2) + '€' }}
+          </button>
         </div>
-      </form>
-
-
-      <div *ngIf="paymentMethod === 'paypal'" class="info-message">
-        <p> Vous serez redirigé vers PayPal pour finaliser le paiement.</p>
-        <p><small>(Simulation : le paiement sera validé automatiquement)</small></p>
       </div>
-
-
-      <div *ngIf="paymentMethod === 'crypto'" class="info-message">
-        <p> Scannez le QR code pour effectuer le paiement.</p>
-        <div class="qr-placeholder">
-          <div class="qr-code"> QR Code</div>
-        </div>
-        <p><small>(Simulation : le paiement sera validé automatiquement)</small></p>
-      </div>
-
-
-      <div class="action-buttons">
-        <button class="btn-cancel"
-                (click)="cancelReservation()"
-                [disabled]="isProcessing">
-          Annuler la réservation
-        </button>
-
-        <button class="btn-pay"
-                (click)="processPayment()"
-                [disabled]="isProcessing">
-          {{ isProcessing ? 'Traitement...' : 'Payer ' + reservation.totalAmount.toFixed(2) + '€' }}
-        </button>
-      </div>
-    </div>
   </div>
 </div>

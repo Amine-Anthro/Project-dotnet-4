@@ -32,6 +32,7 @@ namespace Project_Dotnet_4_V2.Server.Repositories
                 .Include(r => r.Event)
                  .ThenInclude(e => e.Room)
                 .Include(r => r.Seats)
+                .Include(r => r.Payment)
                 .FirstOrDefaultAsync(r => r.Id == id);
         }
 
@@ -41,6 +42,7 @@ namespace Project_Dotnet_4_V2.Server.Repositories
                 .Include(r => r.User)
                 .Include(r => r.Event)
                  .ThenInclude(e => e.Room)
+                 .Include(r => r.Payment)
                 .Include(r => r.Seats)
                 .ToListAsync();
         }

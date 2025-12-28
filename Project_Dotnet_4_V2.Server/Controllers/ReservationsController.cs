@@ -255,7 +255,7 @@ namespace Project_Dotnet_4_V2.Controllers
                 if (reservation.UserId != userId && userRole != "Admin")
                     return Forbid();
 
-                var qrCodeBase64 = _ticketService.GenerateQRCode(id);
+                var qrCodeBase64 = await _ticketService.GenerateQRCodeAsync(id);
 
                 return Ok(new { qrCode = qrCodeBase64 });
             }

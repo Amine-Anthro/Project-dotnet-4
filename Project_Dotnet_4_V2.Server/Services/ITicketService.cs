@@ -3,6 +3,6 @@
     public interface ITicketService
     {
         Task<byte[]> GenerateTicketPdfAsync(int reservationId);
-        string GenerateQRCode(int reservationId);
+        Task<string> GenerateQRCodeAsync(int reservationId);
     }
 }

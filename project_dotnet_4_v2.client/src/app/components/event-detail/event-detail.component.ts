@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EventService, Event, Seat } from '../../services/event.service';
 import { AuthService } from '../../services/auth.service';
 import { ReservationService, CreateReservationDTO } from '../../services/reservation.service';
+import { SignalrService, SeatUpdate } from '../../services/signalr.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-event-detail',
   templateUrl: './event-detail.component.html',
   styleUrls: ['./event-detail.component.css']
 })
-export class EventDetailComponent implements OnInit {
+export class EventDetailComponent implements OnInit, OnDestroy {
   event?: Event;
   selectedSeats: Seat[] = [];
   isLoading: boolean = true;
@@ -18,18 +20,97 @@ export class EventDetailComponent implements OnInit {
   totalPrice: number = 0;
   isProcessing: boolean = false;
 
+  private seatReservedSub?: Subscription;
+  private seatReleasedSub?: Subscription;
+  private seatPaidSub?: Subscription;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private eventService: EventService,
     private reservationService: ReservationService,
-    private authService: AuthService
+    private authService: AuthService,
+    private signalrService: SignalrService
   ) { }
 
   ngOnInit(): void {
     const eventId = Number(this.route.snapshot.paramMap.get('id'));
     this.loadEventDetails(eventId);
+    this.connectToSignalR(eventId);
+  }
+
+  ngOnDestroy(): void {
     
+    this.seatReservedSub?.unsubscribe();
+    this.seatReleasedSub?.unsubscribe();
+    this.seatPaidSub?.unsubscribe();
+
+  
+    if (this.event) {
+      this.signalrService.leaveEventRoom(this.event.id);
+    }
+  }
+
+  async connectToSignalR(eventId: number): Promise<void> {
+    try {
+      // Démarrer la connexion (si pas déjà fait)
+      await this.signalrService.startConnection();
+
+      // Rejoindre la room de l'événement
+      await this.signalrService.joinEventRoom(eventId);
+
+      // Écouter les mises à jour de sièges
+      this.seatReservedSub = this.signalrService.seatReserved$.subscribe(
+        (update: SeatUpdate) => this.handleSeatReserved(update)
+      );
+
+      this.seatReleasedSub = this.signalrService.seatReleased$.subscribe(
+        (update: SeatUpdate) => this.handleSeatReleased(update)
+      );
+
+      this.seatPaidSub = this.signalrService.seatPaid$.subscribe(
+        (update: SeatUpdate) => this.handleSeatPaid(update)
+      );
+
+      console.log(' SignalR connected and listening');
+    } catch (error) {
+      console.error(' SignalR connection error:', error);
+    }
+  }
+
+  handleSeatReserved(update: SeatUpdate): void {
+    console.log(' Seat reserved:', update);
+    this.updateSeatStatus(update.seatId, 1); 
+  }
+
+  handleSeatReleased(update: SeatUpdate): void {
+    console.log(' Seat released:', update);
+    this.updateSeatStatus(update.seatId, 0); 
+  }
+
+  handleSeatPaid(update: SeatUpdate): void {
+    console.log(' Seat paid:', update);
+    this.updateSeatStatus(update.seatId, 2); 
+  }
+
+  updateSeatStatus(seatId: number, newStatus: number): void {
+    if (!this.event?.room?.seats) return;
+
+    const seat = this.event.room.seats.find(s => s.id === seatId);
+    if (seat) {
+      seat.status = newStatus;
+
+      
+      if (newStatus !== 0) {
+        const index = this.selectedSeats.findIndex(s => s.id === seatId);
+        if (index !== -1) {
+          this.selectedSeats.splice(index, 1);
+          this.calculateTotal();
+          this.errorMessage = `Le siège ${seat.row}${seat.number} vient d'être réservé par un autre utilisateur`;
+          setTimeout(() => this.errorMessage = '', 3000);
+        }
+      }
+    }
   }
 
   loadEventDetails(id: number): void {
@@ -156,6 +237,7 @@ export class EventDetailComponent implements OnInit {
         console.error('Erreur lors de la réservation', error);
         this.errorMessage = error.error?.message || 'Erreur lors de la réservation';
         this.isProcessing = false;
+        this.loadEventDetails(this.event!.id);
       }
     });
     

@@ -15,7 +15,6 @@ export class PaymentComponent implements OnInit {
   successMessage = '';
 
   // Formulaire de paiement fictif
-  paymentMethod: string = 'card';
   cardNumber: string = '';
   cardName: string = '';
   cardExpiry: string = '';
@@ -111,7 +110,7 @@ export class PaymentComponent implements OnInit {
   }
 
   validatePayment(): boolean {
-    if (this.paymentMethod === 'card') {
+   
       if (!this.cardNumber || this.cardNumber.length !== 16) {
         this.errorMessage = 'Numéro de carte invalide (16 chiffres requis)';
         return false;
@@ -128,7 +127,7 @@ export class PaymentComponent implements OnInit {
         this.errorMessage = 'CVV invalide (3 chiffres)';
         return false;
       }
-    }
+    
     return true;
   }
 

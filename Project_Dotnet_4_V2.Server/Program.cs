@@ -3,13 +3,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Project_Dotnet_4_V2.Server.Repositories;
-using Project_Dotnet_4_V2.Server.Repositories.Project_Dotnet_4_V2.Server.Repositories;
-using Project_Dotnet_4_V2.Server.Services;
 using Project_Dotnet_4_V2.Data;
 using Project_Dotnet_4_V2.Handlers;
 using Project_Dotnet_4_V2.Repositories;
 using Project_Dotnet_4_V2.Requirements;
+using Project_Dotnet_4_V2.Server.Hubs;
+using Project_Dotnet_4_V2.Server.Repositories;
+using Project_Dotnet_4_V2.Server.Repositories.Project_Dotnet_4_V2.Server.Repositories;
+using Project_Dotnet_4_V2.Server.Services;
 using Project_Dotnet_4_V2.Services;
 using System.Security.Claims;
 using System.Text;
@@ -29,6 +30,9 @@ builder.Services.AddScoped<ISeatRepository, SeatRepository>();
 builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
 builder.Services.AddScoped<IReservationService, ReservationService>();
 builder.Services.AddScoped<ITicketService, TicketService>();
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<IEventNotificationService, EventNotificationService>();
 
 builder.Services.AddSingleton<IAuthorizationHandler, IsAccountNotDisabledHandler>();
 builder.Services.AddSingleton<IAuthorizationHandler, IsAdminHandler>();
@@ -76,14 +80,8 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
-builder.Services.AddCors(options => {
-    options.AddPolicy("Angular", policy => {
-        policy.WithOrigins("http://localhost:4200", "https://localhost:58965")
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
 
-});
+
 
 builder.Services.AddAuthentication(
     JwtBearerDefaults.AuthenticationScheme)
@@ -149,9 +147,30 @@ builder.Services.AddAuthorization(options =>
 
 );
 
+builder.Services.AddSignalR();
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins(
+                "https://localhost:58965",  
+                "https://localhost:5173",   
+                "http://localhost:4200"     
+              )
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials()
+              .SetIsOriginAllowed(_ => true);
+    });
+});
+
+builder.Logging.AddFilter("Microsoft.AspNetCore.SignalR", LogLevel.Debug);
+builder.Logging.AddFilter("Microsoft.AspNetCore.Http.Connections", LogLevel.Debug);
 
 var app = builder.Build();
-app.UseCors("Angular");
+app.UseWebSockets();
+app.UseCors();
 // Configure the HTTP request pipeline.
 
 if (app.Environment.IsDevelopment())
@@ -191,5 +210,7 @@ app.UseAuthorization(); // savoir ce qu'on peut faire
 app.UseHttpsRedirection();
 
 app.MapControllers();
+
+app.MapHub<EventHub>("/hubs/event");
 
 app.Run();

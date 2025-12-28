@@ -9,13 +9,16 @@ namespace Project_Dotnet_4_V2.Server.Services
     {
         private readonly IReservationRepository _reservationRepository;
         private readonly ISeatRepository _seatRepository;
-        private readonly IUserRepository _userRepository; // Tu devras créer celui-ci aussi
-
-        public ReservationService(IReservationRepository reservationRepository, ISeatRepository seatRepository, IUserRepository userRepository)
+        private readonly IUserRepository _userRepository;
+        private readonly IPaymentService _paymentService;
+        private readonly IEventNotificationService _notificationService;
+        public ReservationService(IReservationRepository reservationRepository, ISeatRepository seatRepository, IUserRepository userRepository, IPaymentService paymentService, IEventNotificationService notificationService)
         {
             _reservationRepository = reservationRepository;
             _seatRepository = seatRepository;
             _userRepository = userRepository;
+            _paymentService = paymentService;
+            _notificationService = notificationService;
         }
 
         public async Task<IEnumerable<Reservation>> GetAllReservationsAsync()
@@ -77,7 +80,16 @@ namespace Project_Dotnet_4_V2.Server.Services
             {
                 seat.Status = SeatStatus.Reserved;
                 seat.ReservationId = createdReservation.Id;
+
+                await _notificationService.NotifySeatReservedAsync(
+                   reservationDto.EventId,
+                   seat.Id,
+                   seat.Row,
+                   seat.Number
+                );
             }
+
+
             await _seatRepository.UpdateRangeAsync(seatsList);
 
             return createdReservation;
@@ -100,6 +112,9 @@ namespace Project_Dotnet_4_V2.Server.Services
                 throw new InvalidOperationException("Reservation has expired");
             }
 
+            //  Créer le paiement
+            var payment = await _paymentService.ProcessPaymentAsync(reservationId, "card");
+
             // Mettre à jour le statut de la réservation
             reservation.Status = ReservationStatus.Paid;
             reservation.ExpiresAt = null; // Plus besoin d'expiration
@@ -108,9 +123,17 @@ namespace Project_Dotnet_4_V2.Server.Services
             foreach (var seat in reservation.Seats)
             {
                 seat.Status = SeatStatus.Paid;
+
+                await _notificationService.NotifySeatPaidAsync(
+                      reservation.EventId,
+                      seat.Id,
+                      seat.Row,
+                      seat.Number
+        );
             }
 
             await _seatRepository.UpdateRangeAsync(reservation.Seats);
+
             await _reservationRepository.UpdateAsync(reservation);
 
             return reservation;
@@ -134,6 +157,13 @@ namespace Project_Dotnet_4_V2.Server.Services
             {
                 seat.Status = SeatStatus.Available;
                 seat.ReservationId = null;
+
+                await _notificationService.NotifySeatReleasedAsync(
+                      reservation.EventId,
+                      seat.Id,
+                      seat.Row,
+                      seat.Number
+        );
             }
 
             await _seatRepository.UpdateRangeAsync(reservation.Seats);

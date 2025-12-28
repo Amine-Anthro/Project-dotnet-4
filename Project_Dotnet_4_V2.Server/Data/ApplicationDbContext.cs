@@ -15,27 +15,7 @@ namespace Project_Dotnet_4_V2.Data
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Seat> Seats { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
-
-        /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            var configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .Build();
-
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
-            optionsBuilder.UseSqlServer(connectionString);
-            /*modelBuilder.Entity<Reservation>()
-                .HasMany(r => r.Seats)
-                .WithMany();
-
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.Reservations)  
-                .WithOne(r => r.User)     
-                .HasForeignKey(r => r.UserId);
-
-            modelBuilder.Entity<User>()
-                    .HasIndex(u => u.Username)
-                    .IsUnique();*/
-        //}
+        public DbSet<Payment> Payments { get; set; }
+       
     }
 }
