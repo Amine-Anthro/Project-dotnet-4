@@ -68,19 +68,26 @@ namespace Project_Dotnet_4_V2.Server.Services
                 EventId = reservationDto.EventId,
                 Status = ReservationStatus.InProgress,
                 CreatedAt = DateTime.UtcNow,
-                ExpiresAt = DateTime.UtcNow.AddMinutes(15), // Réservation temporaire de 15 min
+                ExpiresAt = DateTime.UtcNow.AddMinutes(15),
                 TotalAmount = totalAmount,
                 Seats = seatsList
             };
 
             var createdReservation = await _reservationRepository.Create(reservation);
 
-            // 6. Marquer les sièges comme réservés (temporaire)
+            // 6. Marquer les sièges comme réservés
             foreach (var seat in seatsList)
             {
                 seat.Status = SeatStatus.Reserved;
                 seat.ReservationId = createdReservation.Id;
+            }
 
+            //  SAUVEGARDER D'ABORD
+            await _seatRepository.UpdateRangeAsync(seatsList);
+
+            //  NOTIFIER APRÈS (quand les données sont en DB)
+            foreach (var seat in seatsList)
+            {
                 await _notificationService.NotifySeatReservedAsync(
                    reservationDto.EventId,
                    seat.Id,
@@ -88,9 +95,6 @@ namespace Project_Dotnet_4_V2.Server.Services
                    seat.Number
                 );
             }
-
-
-            await _seatRepository.UpdateRangeAsync(seatsList);
 
             return createdReservation;
         }
@@ -105,36 +109,37 @@ namespace Project_Dotnet_4_V2.Server.Services
             if (reservation.Status != ReservationStatus.InProgress)
                 throw new InvalidOperationException("Only reservations in progress can be paid");
 
-            // Vérifier que la réservation n'a pas expiré
             if (reservation.ExpiresAt.HasValue && reservation.ExpiresAt.Value < DateTime.UtcNow)
             {
                 await CancelReservationAsync(reservationId);
                 throw new InvalidOperationException("Reservation has expired");
             }
 
-            //  Créer le paiement
             var payment = await _paymentService.ProcessPaymentAsync(reservationId, "card");
 
-            // Mettre à jour le statut de la réservation
             reservation.Status = ReservationStatus.Paid;
-            reservation.ExpiresAt = null; // Plus besoin d'expiration
+            reservation.ExpiresAt = null;
 
-            // Mettre à jour les sièges (status = Paid au lieu de Reserved)
+            // Mettre à jour les sièges
             foreach (var seat in reservation.Seats)
             {
                 seat.Status = SeatStatus.Paid;
+            }
 
+            //  SAUVEGARDER D'ABORD
+            await _seatRepository.UpdateRangeAsync(reservation.Seats);
+            await _reservationRepository.UpdateAsync(reservation);
+
+            //  NOTIFIER APRÈS
+            foreach (var seat in reservation.Seats)
+            {
                 await _notificationService.NotifySeatPaidAsync(
                       reservation.EventId,
                       seat.Id,
                       seat.Row,
                       seat.Number
-        );
+                );
             }
-
-            await _seatRepository.UpdateRangeAsync(reservation.Seats);
-
-            await _reservationRepository.UpdateAsync(reservation);
 
             return reservation;
         }
@@ -149,25 +154,62 @@ namespace Project_Dotnet_4_V2.Server.Services
             if (reservation.Status == ReservationStatus.Paid)
                 throw new InvalidOperationException("Paid reservations cannot be cancelled");
 
-            // Mettre à jour le statut de la réservation
             reservation.Status = ReservationStatus.Cancelled;
 
-            // Libérer les sièges
             foreach (var seat in reservation.Seats)
             {
                 seat.Status = SeatStatus.Available;
                 seat.ReservationId = null;
+            }
 
+            //  SAUVEGARDER D'ABORD
+            await _seatRepository.UpdateRangeAsync(reservation.Seats);
+            await _reservationRepository.UpdateAsync(reservation);
+
+            //  NOTIFIER APRÈS
+            foreach (var seat in reservation.Seats)
+            {
                 await _notificationService.NotifySeatReleasedAsync(
                       reservation.EventId,
                       seat.Id,
                       seat.Row,
                       seat.Number
-        );
+                );
             }
+        }
 
-            await _seatRepository.UpdateRangeAsync(reservation.Seats);
-            await _reservationRepository.UpdateAsync(reservation);
+        public async Task CancelExpiredReservationsAsync()
+        {
+            var expiredReservations = await _reservationRepository.CheckExpirationAsync();
+
+            if (!expiredReservations.Any())
+                return;
+
+            foreach (var reservation in expiredReservations)
+            {
+                reservation.Status = ReservationStatus.Cancelled;
+
+                foreach (var seat in reservation.Seats)
+                {
+                    seat.Status = SeatStatus.Available;
+                    seat.ReservationId = null;
+                }
+
+                // SAUVEGARDER D'ABORD
+                await _seatRepository.UpdateRangeAsync(reservation.Seats);
+                await _reservationRepository.UpdateAsync(reservation);
+
+                //  NOTIFIER APRÈS
+                foreach (var seat in reservation.Seats)
+                {
+                    await _notificationService.NotifySeatReleasedAsync(
+                        reservation.EventId,
+                        seat.Id,
+                        seat.Row,
+                        seat.Number
+                    );
+                }
+            }
+        }
         }
     }
-}

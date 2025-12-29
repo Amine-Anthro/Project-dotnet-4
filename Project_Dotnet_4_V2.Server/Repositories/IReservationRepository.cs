@@ -10,5 +10,8 @@ namespace Project_Dotnet_4_V2.Server.Repositories
         Task<Reservation> Create(Reservation reservation);
         Task UpdateAsync(Reservation reservation);
         Task<bool> ExistsAsync(int id);
+        Task<IEnumerable<Reservation>> CheckExpirationAsync();
+        Task<int> CountActiveReservationsAsync();
+        Task<IEnumerable<Reservation>> GetReservationsByEventIdAsync(int eventId);
     }
 }

@@ -12,6 +12,7 @@ namespace Project_Dotnet_4_V2.Server.Repositories
             Task UpdateAsync(Event eventItem);
             Task DeleteAsync(int id);
             Task<bool> ExistsAsync(int id);
+            Task<IEnumerable<Event>> GetAllWithRoomAndSeatsAsync();
         }
     }
 }

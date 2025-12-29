@@ -33,6 +33,18 @@ namespace Project_Dotnet_4_V2.Server.Hubs
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, roomName);
             Console.WriteLine($"Client {Context.ConnectionId} left room: {roomName}");
         }
+
+        public async Task JoinDashboard()
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, "dashboard");
+            Console.WriteLine($"Client {Context.ConnectionId} joined dashboard");
+        }
+
+        public async Task LeaveDashboard()
+        {
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, "dashboard");
+            Console.WriteLine($"Client {Context.ConnectionId} left dashboard");
+        }
     }
 }
 

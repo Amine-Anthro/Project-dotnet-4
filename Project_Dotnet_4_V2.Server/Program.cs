@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -32,7 +33,16 @@ builder.Services.AddScoped<IReservationService, ReservationService>();
 builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
-builder.Services.AddScoped<IEventNotificationService, EventNotificationService>();
+//  Je mets en Singleton (car il a besoin de IDashboardService qui a besoin du DbContext)
+// On va injecter IServiceProvider à la place
+builder.Services.AddSingleton<IEventNotificationService>(sp =>
+{
+    var hubContext = sp.GetRequiredService<IHubContext<EventHub>>();
+    var serviceProvider = sp;
+    return new EventNotificationService(hubContext, serviceProvider);
+});
+builder.Services.AddHostedService<ReservationExpirationService>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
 
 builder.Services.AddSingleton<IAuthorizationHandler, IsAccountNotDisabledHandler>();
 builder.Services.AddSingleton<IAuthorizationHandler, IsAdminHandler>();

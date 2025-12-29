@@ -1,0 +1,101 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1>Tableau de bord organisateur</h1>
+    <button class="btn-refresh" (click)="loadStats()">
+      Actualiser
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="loading">
+    Chargement des statistiques...
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="stats && !isLoading" class="dashboard-content">
+    <!-- Statistiques globales -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Événements totaux</div>
+        <div class="stat-value">{{ stats.totalEvents }}</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Réservations actives</div>
+        <div class="stat-value">{{ stats.totalReservations }}</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Sièges réservés</div>
+        <div class="stat-value">{{ stats.totalSeatsReserved }}</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Sièges payés</div>
+        <div class="stat-value">{{ stats.totalSeatsPaid }}</div>
+      </div>
+
+      <div class="stat-card highlight">
+        <div class="stat-label">Revenu total</div>
+        <div class="stat-value">{{ stats.totalRevenue | currency:'EUR' }}</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Revenu en attente</div>
+        <div class="stat-value">{{ stats.pendingRevenue | currency:'EUR' }}</div>
+      </div>
+    </div>
+
+    <!-- Détails par événement -->
+    <div class="events-section">
+      <h2>Détails par événement</h2>
+
+      <div class="events-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Événement</th>
+              <th>Sièges totaux</th>
+              <th>Disponibles</th>
+              <th>Réservés</th>
+              <th>Payés</th>
+              <th>Taux de remplissage</th>
+              <th>Revenu</th>
+              <th>Revenu potentiel</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let event of stats.eventsStats">
+              <td class="event-name">{{ event.eventName }}</td>
+              <td>{{ event.totalSeats }}</td>
+              <td>{{ event.availableSeats }}</td>
+              <td>{{ event.reservedSeats }}</td>
+              <td>{{ event.paidSeats }}</td>
+              <td>
+                <div class="fill-rate">
+                  <div class="fill-rate-bar">
+                    <div class="fill-rate-progress"
+                         [style.width.%]="event.fillRate"
+                         [ngClass]="getStatusClass(event.fillRate)">
+                    </div>
+                  </div>
+                  <span class="fill-rate-text">{{ event.fillRate }}%</span>
+                </div>
+              </td>
+              <td class="revenue">{{ event.revenue | currency:'EUR' }}</td>
+              <td class="potential">{{ event.potentialRevenue | currency:'EUR' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Indicateur de mise à jour en temps réel -->
+    <div class="live-indicator">
+      <span class="live-dot"></span>
+      Mises à jour en temps réel
+    </div>
+  </div>
+</div>

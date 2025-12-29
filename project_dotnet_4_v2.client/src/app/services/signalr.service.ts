@@ -1,7 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { Subject } from 'rxjs';
-
 export interface SeatUpdate {
   seatId: number;
   row: string;
@@ -19,8 +18,9 @@ export class SignalrService {
   public seatReserved$ = new Subject<SeatUpdate>();
   public seatReleased$ = new Subject<SeatUpdate>();
   public seatPaid$ = new Subject<SeatUpdate>();
-
-  constructor() { }
+  public dashboardUpdated$ = new Subject<any>();
+  public eventStatsUpdated$ = new Subject<any>();
+  constructor(private ngZone: NgZone) { } 
 
   public startConnection(): Promise<void> {
 
@@ -30,9 +30,9 @@ export class SignalrService {
     }
 
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('https://localhost:5000/hubs/event')
+      .withUrl('http://localhost:5000/hubs/event')
       .withAutomaticReconnect()
-      .configureLogging(signalR.LogLevel.Debug)
+      .configureLogging(signalR.LogLevel.Information)
       .build();
 
     return this.hubConnection
@@ -52,8 +52,10 @@ export class SignalrService {
     if (!this.hubConnection) return;
 
     this.hubConnection.on('SeatReserved', (data: SeatUpdate) => {
-      console.log(' Seat reserved:', data);
-      this.seatReserved$.next(data);
+      this.ngZone.run(() => {  // Exécuter dans la zone Angular
+        console.log('Seat reserved:', data);
+        this.seatReserved$.next(data);
+      });
     });
 
     this.hubConnection.on('SeatReleased', (data: SeatUpdate) => {
@@ -65,6 +67,38 @@ export class SignalrService {
       console.log(' Seat paid:', data);
       this.seatPaid$.next(data);
     });
+
+    this.hubConnection.on('DashboardUpdated', (data: any) => {
+      console.log(' Dashboard updated:', data);
+      this.dashboardUpdated$.next(data);
+    });
+
+    this.hubConnection.on('EventStatsUpdated', (data: any) => {
+      console.log(' Event stats updated:', data);
+      this.eventStatsUpdated$.next(data);
+    });
+  }
+
+  public joinDashboard(): Promise<void> {
+    if (!this.hubConnection || this.hubConnection.state !== signalR.HubConnectionState.Connected) {
+      console.warn(' Cannot join dashboard: not connected');
+      return Promise.reject('Not connected');
+    }
+
+    return this.hubConnection.invoke('JoinDashboard')
+      .then(() => console.log(' Joined dashboard'))
+      .catch(err => console.error(' Error joining dashboard:', err));
+  }
+
+  public leaveDashboard(): Promise<void> {
+    if (!this.hubConnection || this.hubConnection.state !== signalR.HubConnectionState.Connected) {
+      console.warn('⚠️ Cannot leave dashboard: not connected');
+      return Promise.resolve();
+    }
+
+    return this.hubConnection.invoke('LeaveDashboard')
+      .then(() => console.log(' Left dashboard'))
+      .catch(err => console.error(' Error leaving dashboard:', err));
   }
 
   public joinEventRoom(eventId: number): Promise<void> {

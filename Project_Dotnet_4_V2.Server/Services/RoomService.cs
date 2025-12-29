@@ -78,7 +78,7 @@ namespace Project_Dotnet_4_V2.Server.Services
             int totalRows = room.TotalRows;
             int seatsPerRow = room.SeatsPerRow;
             int firstThird = totalRows / 3;
-            int middleThird = firstThird * 2;
+            int middleThird = (totalRows * 2)/3;
 
             for (int rowIndex = 0; rowIndex < totalRows; rowIndex++)
             {

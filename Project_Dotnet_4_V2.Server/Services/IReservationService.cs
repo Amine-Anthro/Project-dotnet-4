@@ -11,5 +11,6 @@ namespace Project_Dotnet_4_V2.Server.Services
         Task<Reservation> CreateReservationAsync(CreateReservationDTO reservationDto);
         Task<Reservation> ConfirmPaymentAsync(int reservationId);
         Task CancelReservationAsync(int reservationId);
+        Task CancelExpiredReservationsAsync();
     }
 }

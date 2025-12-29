@@ -57,5 +57,13 @@ namespace Project_Dotnet_4_V2.Server.Repositories
         {
             return await _context.Events.AnyAsync(e => e.Id == id);
         }
+
+        public async Task<IEnumerable<Event>> GetAllWithRoomAndSeatsAsync()
+        {
+            return await _context.Events
+                .Include(e => e.Room)
+                    .ThenInclude(r => r.Seats)
+                .ToListAsync();
+        }
     }
 }

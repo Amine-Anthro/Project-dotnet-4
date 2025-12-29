@@ -60,5 +60,30 @@ namespace Project_Dotnet_4_V2.Server.Repositories
                 .Include(r => r.Seats)
                 .Where(r => r.UserId == userId).ToListAsync();
         }
+
+        public async Task<IEnumerable<Reservation>> CheckExpirationAsync()
+        {
+            return await _context.Reservations
+                    .Include(r => r.Seats)
+                    .Where(r =>
+                        r.Status == ReservationStatus.InProgress &&
+                        r.ExpiresAt.HasValue &&
+                        r.ExpiresAt.Value < DateTime.UtcNow)
+                    .ToListAsync();
+        }
+
+        public async Task<int> CountActiveReservationsAsync()
+        {
+            return await _context.Reservations
+                .CountAsync(r => r.Status == ReservationStatus.InProgress || r.Status == ReservationStatus.Paid);
+        }
+
+        public async Task<IEnumerable<Reservation>> GetReservationsByEventIdAsync(int eventId)
+        {
+            return await _context.Reservations
+                .Include(r => r.Seats)
+                .Where(r => r.EventId == eventId)
+                .ToListAsync();
+        }
     }
 }
