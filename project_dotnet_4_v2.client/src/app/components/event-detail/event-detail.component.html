@@ -1,7 +1,7 @@
 <div class="event-detail-container" *ngIf="!isLoading">
  
   <div class="event-header" *ngIf="event">
-    <button class="btn-back" (click)="goBack()">← Retour</button>
+    <button class="btn-back" (click)="goBack()">← Back</button>
 
     <div class="event-info">
       <div class="event-poster" *ngIf="event.imageUrl">
@@ -25,11 +25,11 @@
         </div>
 
         <div class="detail-item">
-          <span>{{ event.date | date:'dd/MM/yyyy HH:mm' }}</span>
+          <span>{{ event.date | date:'MM/dd/yyyy HH:mm' }}</span>
         </div>
 
         <div class="detail-item" *ngIf="event.room">
-          <span>Salle {{ event.room.name }} - {{ event.room.capacity }} places</span>
+          <span>Room {{ event.room.name }} - {{ event.room.capacity }} seats</span>
         </div>
 
         <p class="event-description">{{ event.description }}</p>
@@ -48,38 +48,38 @@
 
 
   <div class="legend">
-    <h3>Zones tarifaires</h3>
+    <h3>Pricing Zones</h3>
     <div class="legend-items">
       <div class="legend-item">
         <div class="seat-preview zone-0"></div>
-        <span>Économique - {{ event?.room?.economicPrice }}€</span>
+        <span>Economy - ${{ event?.room?.economicPrice }}</span>
       </div>
       <div class="legend-item">
         <div class="seat-preview zone-1"></div>
-        <span>VIP - {{ event?.room?.vipPrice }}€</span>
+        <span>VIP - ${{ event?.room?.vipPrice }}</span>
       </div>
       <div class="legend-item">
         <div class="seat-preview zone-2"></div>
-        <span>Standard - {{ event?.room?.standardPrice }}€</span>
+        <span>Standard - ${{ event?.room?.standardPrice }}</span>
       </div>
       <div class="legend-item">
         <div class="seat-preview reserved"></div>
-        <span>Réservé</span>
+        <span>Reserved</span>
       </div>
       <div class="legend-item">
         <div class="seat-preview paid"></div>
-        <span>Payé</span>
+        <span>Paid</span>
       </div>
       <div class="legend-item">
         <div class="seat-preview selected"></div>
-        <span>Sélectionné</span>
+        <span>Selected</span>
       </div>
     </div>
   </div>
 
 
   <div class="theater-container">
-    <div class="screen">ÉCRAN</div>
+    <div class="screen">SCREEN</div>
 
     <div class="seats-grid">
       <div *ngFor="let row of getRows()" class="seat-row">
@@ -89,7 +89,7 @@
           <div *ngFor="let seat of getSeatsByRow()[row]"
                [class]="getSeatClass(seat)"
                (click)="toggleSeat(seat)"
-               [title]="'Rangée ' + seat.row + ' - Siège ' + seat.number + ' - ' + getZoneName(seat.zone) + ' - ' + seat.price + '€'">
+               [title]="'Row ' + seat.row + ' - Seat ' + seat.number + ' - ' + getZoneName(seat.zone) + ' - $' + seat.price">
             {{ seat.number }}
           </div>
         </div>
@@ -102,7 +102,7 @@
 
   <div class="reservation-panel" *ngIf="selectedSeats.length > 0">
     <div class="panel-header">
-      <h3>Votre sélection ({{ selectedSeats.length }} siège{{ selectedSeats.length > 1 ? 's' : '' }})</h3>
+      <h3>Your Selection ({{ selectedSeats.length }} seat{{ selectedSeats.length > 1 ? 's' : '' }})</h3>
     </div>
 
     <div class="selected-seats-list">
@@ -110,32 +110,32 @@
         <span class="seat-info">
           <strong>{{ seat.row }}{{ seat.number }}</strong> - {{ getZoneName(seat.zone) }}
         </span>
-        <span class="seat-price">{{ seat.price }}€</span>
+        <span class="seat-price">${{ seat.price }}</span>
         <button class="btn-remove" (click)="toggleSeat(seat)">×</button>
       </div>
     </div>
 
     <div class="panel-footer">
       <div class="total-price">
-        <span>Total :</span>
-        <span class="price">{{ totalPrice.toFixed(2) }}€</span>
+        <span>Total:</span>
+        <span class="price">${{ totalPrice.toFixed(2) }}</span>
       </div>
 
       <button class="btn-reserve"
               (click)="proceedToReservation()"
               [disabled]="isProcessing">
-        {{ isProcessing ? 'Traitement...' : 'Réserver' }}
+        {{ isProcessing ? 'Processing...' : 'Book' }}
       </button>
     </div>
   </div>
 
   
   <div class="empty-selection" *ngIf="selectedSeats.length === 0 && event?.room?.seats">
-    <p>👆 Sélectionnez vos sièges en cliquant dessus</p>
+    <p> Select your seats by clicking on them</p>
   </div>
 </div>
 
 
 <div *ngIf="isLoading" class="loading">
-  Chargement de l'événement...
+  Loading event...
 </div>

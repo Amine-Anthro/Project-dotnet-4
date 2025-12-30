@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-//import { Router } from '../../../node_modules/@angular/router/router_module.d';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -43,9 +42,35 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/register`, userData);
   }
 
+  getCurrentUser(): { username: string; role: string } | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return {
+        username: payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
+        role: payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  getUsername(): string | null {
+    const user = this.getCurrentUser();
+    return user?.username || null;
+  }
+
+  getRole(): string | null {
+    const user = this.getCurrentUser();
+    return user?.role || null;
+  }
+
   getToken(): string | null {
     return localStorage.getItem('token')
   }
+
 
   isLoggedIn(): boolean {
     return this.getToken() !== null;

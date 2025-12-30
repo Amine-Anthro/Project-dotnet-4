@@ -1,7 +1,7 @@
 <div class="payment-container">
 
   <div *ngIf="isLoading" class="loading">
-    Chargement...
+    Loading...
   </div>
 
  
@@ -17,53 +17,53 @@
     </div>
 
     <div class="reservation-summary">
-      <h2>Récapitulatif de votre réservation</h2>
+      <h2>Reservation Summary</h2>
 
       <div class="summary-card">
         <div class="reservation-info">
           <div class="info-row">
-            <span class="label">Réservation #</span>
+            <span class="label">Reservation #</span>
             <span class="value">{{ reservation.id }}</span>
           </div>
 
           <div class="info-row">
-            <span class="label">Statut</span>
+            <span class="label">Status</span>
             <span [class]="'status-badge ' + getStatusBadgeClass(reservation.status)">
               {{ getStatusText(reservation.status) }}
             </span>
           </div>
 
           <div class="info-row" *ngIf="reservation.expiresAt && reservation.status === 'InProgress'">
-            <span class="label">⏱ Temps restant</span>
+            <span class="label">⏱ Time Remaining</span>
             <span class="value expires">{{ formatExpiresAt(reservation.expiresAt) }}</span>
           </div>
 
           <div class="info-row" *ngIf="reservation.event">
-            <span class="label">Événement</span>
+            <span class="label">Event</span>
             <span class="value">{{ reservation.event.name }}</span>
           </div>
 
           <div class="info-row" *ngIf="reservation.event">
             <span class="label">Date</span>
-            <span class="value">{{ reservation.event.date | date:'dd/MM/yyyy HH:mm' }}</span>
+            <span class="value">{{ reservation.event.date | date:'MM/dd/yyyy HH:mm' }}</span>
           </div>
         </div>
 
         <div class="seats-list">
-          <h3>Sièges sélectionnés ({{ reservation.seats.length }})</h3>
+          <h3>Selected Seats ({{ reservation.seats.length }})</h3>
           <div class="seats-grid">
             <div *ngFor="let seat of reservation.seats" class="seat-item">
               <span class="seat-label">{{ seat.row }}{{ seat.number }}</span>
               <span class="seat-zone">{{ getZoneName(seat.zone) }}</span>
-              <span class="seat-price">{{ seat.price }}€</span>
+              <span class="seat-price">${{ seat.price }}</span>
             </div>
           </div>
         </div>
 
         <div class="total-section">
           <div class="total-row">
-            <span class="total-label">Total à payer</span>
-            <span class="total-amount">{{ reservation.totalAmount.toFixed(2) }}€</span>
+            <span class="total-label">Total to Pay</span>
+            <span class="total-amount">${{ reservation.totalAmount.toFixed(2) }}</span>
           </div>
         </div>
       </div>
@@ -71,11 +71,11 @@
 
 
       <div class="payment-form" *ngIf="isInProgress()">
-        <h2>Paiement par carte bancaire</h2>
+        <h2>Credit Card Payment</h2>
 
         <form class="card-form">
           <div class="form-group">
-            <label for="cardNumber">Numéro de carte</label>
+            <label for="cardNumber">Card Number</label>
             <input type="text"
                    id="cardNumber"
                    [(ngModel)]="cardNumber"
@@ -83,21 +83,21 @@
                    placeholder="1234 5678 9012 3456"
                    maxlength="16"
                    pattern="[0-9]*">
-            <small>Utilisez : 1234567890123456 (carte de test)</small>
+            <small>Use: 1234567890123456 (test card)</small>
           </div>
 
           <div class="form-group">
-            <label for="cardName">Nom du titulaire</label>
+            <label for="cardName">Cardholder Name</label>
             <input type="text"
                    id="cardName"
                    [(ngModel)]="cardName"
                    name="cardName"
-                   placeholder="JEAN DUPONT">
+                   placeholder="JOHN DOE">
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label for="cardExpiry">Date d'expiration</label>
+              <label for="cardExpiry">Expiration Date</label>
               <input type="text"
                      id="cardExpiry"
                      [(ngModel)]="cardExpiry"
@@ -123,13 +123,13 @@
           <button class="btn-cancel"
                   (click)="cancelReservation()"
                   [disabled]="isProcessing">
-            Annuler la réservation
+            Cancel Reservation
           </button>
 
           <button class="btn-pay"
                   (click)="processPayment()"
                   [disabled]="isProcessing">
-            {{ isProcessing ? 'Traitement...' : 'Payer ' + reservation.totalAmount.toFixed(2) + '€' }}
+            {{ isProcessing ? 'Processing...' : 'Pay $' + reservation.totalAmount.toFixed(2) }}
           </button>
         </div>
       </div>

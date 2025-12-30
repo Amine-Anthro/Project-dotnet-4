@@ -1,9 +1,21 @@
 <nav class="navbar">
   <div class="navbar-content">
     <h1>Cinepolis</h1>
-    <div class="nav-links">
-      <a routerLink="/login" routerLinkActive="active">Connexion</a>
-      <a routerLink="/register" routerLinkActive="active">Inscription</a>
+    <div class="navbar-menu">
+
+   
+      <div *ngIf="authService.isLoggedIn()" class="navbar-user">
+        <span class="user-info">
+          {{ username }} <span class="user-role">({{ role }})</span>
+        </span>
+        <button class="btn-logout" (click)="logout()">Logout</button>
+      </div>
+
+ 
+      <div *ngIf="!authService.isLoggedIn()" class="navbar-auth">
+        <button class="btn-login" routerLink="/login">Login</button>
+        <button class="btn-register" routerLink="/register">Register</button>
+      </div>
     </div>
   </div>
 </nav>
@@ -13,5 +25,5 @@
 </main>
 
 <footer class="text-center mt-2">
-  <p>Cinepolis</p>
+  <p>&copy; 2025 Cinepolis - All rights reserved</p>
 </footer>

@@ -1,8 +1,8 @@
 <div class="admin-container">
   <div class="admin-header">
-    <h1>Gestion des Événements</h1>
+    <h1>Event Management</h1>
     <button class="btn-primary" (click)="openCreateForm()">
-      + Créer un événement
+      + Create an Event
     </button>
   </div>
 
@@ -15,12 +15,12 @@
     {{ errorMessage }}
   </div>
 
- 
+
   <div *ngIf="isLoading" class="loading">
-    Chargement des événements...
+    Loading events...
   </div>
 
- 
+
   <div *ngIf="!isLoading && !showForm" class="events-grid">
     <div *ngFor="let event of events" class="event-card">
       <div class="event-image" *ngIf="event.imageUrl">
@@ -30,7 +30,7 @@
       <div class="event-content">
         <div class="event-header">
           <h3>{{ event.name }}</h3>
-          <span class="price-badge">{{ event.basePrice }}€</span>
+          <span class="price-badge">${{ event.basePrice }}</span>
         </div>
 
         <div class="event-details">
@@ -51,7 +51,7 @@
           </div>
 
           <div class="detail-row" *ngIf="event.room">
-            <span>Salle {{ event.room.name }}</span>
+            <span>Room {{ event.room.name }}</span>
           </div>
         </div>
 
@@ -61,45 +61,45 @@
 
         <div class="event-actions">
           <button class="btn-edit" (click)="openEditForm(event)">
-            Modifier
+            Edit
           </button>
           <button class="btn-delete" (click)="deleteEvent(event.id, event.name)">
-            Supprimer
+            Delete
           </button>
         </div>
       </div>
     </div>
 
     <div *ngIf="events.length === 0" class="empty-state">
-      <p>Aucun événement créé pour le moment.</p>
+      <p>No events created yet.</p>
       <button class="btn-primary" (click)="openCreateForm()">
-        Créer le premier événement
+        Create the first event
       </button>
     </div>
   </div>
 
-  
+
   <div *ngIf="showForm" class="form-container">
     <div class="form-card">
       <div class="form-header">
-        <h2>{{ isEditing ? 'Modifier l\'événement' : 'Créer un nouvel événement' }}</h2>
+        <h2>{{ isEditing ? 'Edit Event' : 'Create New Event' }}</h2>
         <button class="btn-close" (click)="closeForm()">×</button>
       </div>
 
       <form (ngSubmit)="onSubmit()">
         <div class="form-grid">
           <div class="form-group full-width">
-            <label for="name">Nom de l'événement *</label>
+            <label for="name">Event Name *</label>
             <input type="text"
                    id="name"
                    [(ngModel)]="eventForm.name"
                    name="name"
-                   placeholder="Ex: La Cité de la Peur"
+                   placeholder="e.g., The Big Lebowski"
                    required>
           </div>
 
           <div class="form-group">
-            <label for="date">Date et heure *</label>
+            <label for="date">Date and Time *</label>
             <input type="datetime-local"
                    id="date"
                    [(ngModel)]="eventForm.date"
@@ -108,21 +108,21 @@
           </div>
 
           <div class="form-group">
-            <label for="roomId">Salle *</label>
+            <label for="roomId">Room *</label>
             <select id="roomId"
                     [(ngModel)]="eventForm.roomId"
                     name="roomId"
                     required>
-              <option [value]="0" disabled>-- Sélectionner une salle --</option>
+              <option [value]="0" disabled>-- Select a room --</option>
               <option *ngFor="let room of rooms" [value]="room.id">
-                Salle {{ room.name }} ({{ room.capacity }} places)
+                Room {{ room.name }} ({{ room.capacity }} seats)
               </option>
             </select>
           </div>
 
           <div class="form-group">
-            <label for="basePrice">Prix de base *</label>
-            <input type="name"
+            <label for="basePrice">Base Price *</label>
+            <input type="number"
                    id="basePrice"
                    [(ngModel)]="eventForm.basePrice"
                    name="basePrice"
@@ -132,17 +132,17 @@
           </div>
 
           <div class="form-group">
-            <label for="director">Réalisateur</label>
+            <label for="director">Director</label>
             <input type="text"
                    id="director"
                    [(ngModel)]="eventForm.director"
                    name="director"
-                   placeholder="Ex: Alain Berbérian">
+                   placeholder="e.g., Quentin Tarantino">
           </div>
 
           <div class="form-group">
-            <label for="duration">Durée (minutes)</label>
-            <input type="name"
+            <label for="duration">Duration (minutes)</label>
+            <input type="number"
                    id="duration"
                    [(ngModel)]="eventForm.duration"
                    name="duration"
@@ -156,11 +156,11 @@
                    id="genre"
                    [(ngModel)]="eventForm.genre"
                    name="genre"
-                   placeholder="Ex: Comédie">
+                   placeholder="e.g., Comedy">
           </div>
 
           <div class="form-group full-width">
-            <label for="imageUrl">URL de l'image</label>
+            <label for="imageUrl">Image URL</label>
             <input type="url"
                    id="imageUrl"
                    [(ngModel)]="eventForm.imageUrl"
@@ -174,17 +174,17 @@
                       [(ngModel)]="eventForm.description"
                       name="description"
                       rows="5"
-                      placeholder="Description de l'événement..."
+                      placeholder="Event description..."
                       required></textarea>
           </div>
         </div>
 
         <div class="form-actions">
           <button type="button" class="btn-cancel" (click)="closeForm()">
-            Annuler
+            Cancel
           </button>
           <button type="submit" class="btn-submit">
-            {{ isEditing ? 'Enregistrer les modifications' : 'Créer l\'événement' }}
+            {{ isEditing ? 'Save Changes' : 'Create Event' }}
           </button>
         </div>
       </form>
