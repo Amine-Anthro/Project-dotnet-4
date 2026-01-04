@@ -2,6 +2,8 @@
   max-width: 1400px;
   margin: 0 auto;
   padding: 2rem;
+  background-color: #16213e;
+  min-height: calc(100vh - 80px);
 }
 
 .dashboard-header {
@@ -13,23 +15,28 @@
 
   .dashboard-header h1 {
     font-size: 2rem;
-    color: #333;
+    color: #c77f3a;
     margin: 0;
   }
 
 .btn-refresh {
   padding: 0.75rem 1.5rem;
-  background-color: #007bff;
+  background-color: #c77f3a;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 1rem;
-  transition: background-color 0.3s;
+  font-weight: 600;
+  transition: all 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
   .btn-refresh:hover {
-    background-color: #0056b3;
+    background-color: #b06d2f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(199, 127, 58, 0.3);
   }
 
 .loading,
@@ -39,14 +46,18 @@
   font-size: 1.2rem;
 }
 
-.error-message {
-  color: #dc3545;
-  background-color: #f8d7da;
-  border: 1px solid #f5c6cb;
-  border-radius: 6px;
+.loading {
+  color: #b0b0b0;
 }
 
-/* Grille de statistiques */
+.error-message {
+  color: #ff6b6b;
+  background-color: rgba(255, 107, 107, 0.1);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+  border-radius: 8px;
+  border-left: 4px solid #ff6b6b;
+}
+
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -55,26 +66,28 @@
 }
 
 .stat-card {
-  background: white;
+  background: #1a1a2e;
   padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(199, 127, 58, 0.2);
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
   .stat-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 24px rgba(199, 127, 58, 0.3);
+    border-color: #c77f3a;
   }
 
   .stat-card.highlight {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #c77f3a 0%, #d89150 100%);
     color: white;
+    border: none;
   }
 
 .stat-label {
   font-size: 0.875rem;
-  color: #666;
+  color: #b0b0b0;
   margin-bottom: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -87,26 +100,26 @@
 .stat-value {
   font-size: 2rem;
   font-weight: bold;
-  color: #333;
+  color: #e0e0e0;
 }
 
 .stat-card.highlight .stat-value {
   color: white;
 }
 
-/* Section événements */
+
 .events-section {
-  background: white;
+  background: #1a1a2e;
   padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(199, 127, 58, 0.2);
   margin-bottom: 2rem;
 }
 
   .events-section h2 {
     margin-top: 0;
     margin-bottom: 1.5rem;
-    color: #333;
+    color: #c77f3a;
   }
 
 .events-table {
@@ -119,21 +132,22 @@ table {
 }
 
 thead {
-  background-color: #f8f9fa;
+  background-color: #2a2a3e;
 }
 
 th {
   padding: 1rem;
   text-align: left;
   font-weight: 600;
-  color: #495057;
-  border-bottom: 2px solid #dee2e6;
+  color: #c77f3a;
+  border-bottom: 2px solid rgba(199, 127, 58, 0.3);
   white-space: nowrap;
 }
 
 td {
   padding: 1rem;
-  border-bottom: 1px solid #dee2e6;
+  border-bottom: 1px solid rgba(199, 127, 58, 0.2);
+  color: #e0e0e0;
 }
 
 tr:last-child td {
@@ -141,12 +155,12 @@ tr:last-child td {
 }
 
 tbody tr:hover {
-  background-color: #f8f9fa;
+  background-color: #2a2a3e;
 }
 
 .event-name {
   font-weight: 500;
-  color: #007bff;
+  color: #c77f3a;
 }
 
 .revenue,
@@ -155,10 +169,10 @@ tbody tr:hover {
 }
 
 .revenue {
-  color: #28a745;
+  color: #51cf66;
 }
 
-/* Barre de taux de remplissage */
+
 .fill-rate {
   display: flex;
   align-items: center;
@@ -168,9 +182,10 @@ tbody tr:hover {
 .fill-rate-bar {
   flex: 1;
   height: 24px;
-  background-color: #e9ecef;
+  background-color: #2a2a3e;
   border-radius: 12px;
   overflow: hidden;
+  border: 1px solid rgba(199, 127, 58, 0.2);
 }
 
 .fill-rate-progress {
@@ -185,7 +200,7 @@ tbody tr:hover {
 }
 
   .fill-rate-progress.status-low {
-    background-color: #dc3545;
+    background-color: #ff6b6b;
   }
 
   .fill-rate-progress.status-medium {
@@ -193,32 +208,34 @@ tbody tr:hover {
   }
 
   .fill-rate-progress.status-high {
-    background-color: #28a745;
+    background-color: #51cf66;
   }
 
 .fill-rate-text {
   font-weight: 600;
   min-width: 50px;
   text-align: right;
+  color: #e0e0e0;
 }
 
-/* Indicateur temps réel */
+
 .live-indicator {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   padding: 1rem;
-  background-color: #f8f9fa;
-  border-radius: 6px;
+  background-color: #2a2a3e;
+  border-radius: 8px;
   font-size: 0.875rem;
-  color: #666;
+  color: #b0b0b0;
+  border: 1px solid rgba(199, 127, 58, 0.2);
 }
 
 .live-dot {
   width: 10px;
   height: 10px;
-  background-color: #28a745;
+  background-color: #51cf66;
   border-radius: 50%;
   animation: pulse 2s infinite;
 }
@@ -233,7 +250,6 @@ tbody tr:hover {
   }
 }
 
-/* Responsive */
 @media (max-width: 1200px) {
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);

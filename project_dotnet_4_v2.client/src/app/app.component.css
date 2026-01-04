@@ -5,21 +5,51 @@
   box-sizing: border-box;
 }
 
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #16213e !important;
+}
+
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f5f5f5;
-  color: #333;
+  color: #e0e0e0;
 }
 
 input, button {
   font-family: inherit;
 }
 
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
+.app-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #16213e;
 }
+
+
+.main-content {
+  flex: 1;
+  background-color: #16213e;
+  width: 100%;
+}
+
+
+.footer {
+  background-color: #1a1a2e;
+  color: #b0b0b0;
+  text-align: center;
+  padding: 1.5rem;
+  border-top: 1px solid rgba(199, 127, 58, 0.3);
+  margin-top: auto;
+}
+
+  .footer p {
+    margin: 0;
+    font-size: 0.9rem;
+  }
 
 .text-center {
   text-align: center;
@@ -41,9 +71,11 @@ input, button {
   margin-bottom: 2rem;
 }
 
+
 .navbar {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #1a1a2e;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border-bottom: 2px solid #c77f3a;
 }
 
 .navbar-content {
@@ -59,10 +91,17 @@ input, button {
   .navbar-content h1 {
     margin: 0;
     font-size: 1.8rem;
-    color: white;
+    color: #c77f3a;
     font-weight: 700;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: color 0.3s ease;
   }
+
+    .navbar-content h1:hover {
+      color: #d89150;
+    }
+
 
 .navbar-menu {
   display: flex;
@@ -77,7 +116,7 @@ input, button {
 }
 
   .nav-links a {
-    color: white;
+    color: #e0e0e0;
     text-decoration: none;
     padding: 0.6rem 1.2rem;
     border-radius: 8px;
@@ -87,12 +126,14 @@ input, button {
   }
 
     .nav-links a:hover {
-      background-color: rgba(255, 255, 255, 0.15);
+      background-color: rgba(199, 127, 58, 0.2);
+      color: #c77f3a;
       transform: translateY(-1px);
     }
 
     .nav-links a.active {
-      background-color: rgba(255, 255, 255, 0.25);
+      background-color: #c77f3a;
+      color: white;
       font-weight: 600;
     }
 
@@ -102,21 +143,21 @@ input, button {
   align-items: center;
   gap: 1.5rem;
   padding-left: 1.5rem;
-  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  border-left: 1px solid rgba(199, 127, 58, 0.3);
 }
 
 .user-info {
   font-size: 0.95rem;
-  color: white;
+  color: #e0e0e0;
   font-weight: 500;
 }
 
 .user-role {
-  color: #ffd700;
+  color: #c77f3a;
   font-weight: 700;
   text-transform: uppercase;
   font-size: 0.85rem;
-  background: rgba(255, 215, 0, 0.2);
+  background: rgba(199, 127, 58, 0.2);
   padding: 0.2rem 0.6rem;
   border-radius: 12px;
 }
@@ -124,19 +165,22 @@ input, button {
 
 .btn-logout {
   padding: 0.6rem 1.2rem;
-  background-color: rgba(220, 53, 69, 0.9);
+  background-color: #d32f2f;
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
   transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.9rem;
 }
 
   .btn-logout:hover {
-    background-color: #c82333;
+    background-color: #c62828;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+    box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
   }
 
 .navbar-auth {
@@ -152,29 +196,32 @@ input, button {
   cursor: pointer;
   font-weight: 600;
   transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.9rem;
 }
 
 .btn-login {
-  background-color: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: 2px solid white;
+  background-color: transparent;
+  color: #c77f3a;
+  border: 2px solid #c77f3a;
 }
 
   .btn-login:hover {
-    background-color: white;
-    color: #667eea;
+    background-color: #c77f3a;
+    color: white;
     transform: translateY(-1px);
   }
 
 .btn-register {
-  background-color: white;
-  color: #667eea;
+  background-color: #c77f3a;
+  color: white;
 }
 
   .btn-register:hover {
-    background-color: #f8f9fa;
+    background-color: #b06d2f;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(199, 127, 58, 0.3);
   }
 
 
@@ -197,7 +244,7 @@ input, button {
   .navbar-user {
     border-left: none;
     padding-left: 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    border-top: 1px solid rgba(199, 127, 58, 0.3);
     padding-top: 1rem;
   }
 }

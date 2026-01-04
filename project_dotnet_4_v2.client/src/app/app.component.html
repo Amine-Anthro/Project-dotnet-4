@@ -1,52 +1,54 @@
-<nav class="navbar">
-  <div class="navbar-content">
-    <h1 routerLink="/home" style="cursor: pointer;">Cinepolis</h1>
+<div class="app-wrapper">
+  <nav class="navbar">
+    <div class="navbar-content">
+      <h1 routerLink="/home" style="cursor: pointer;">Cinepolis</h1>
 
-    <div class="navbar-menu">
-      
-      <div *ngIf="authService.isLoggedIn()" class="nav-links">
-        <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-          Home 
-        </a>
-        <a routerLink="/my-reservations" routerLinkActive="active">
-          My Reservations
-        </a>
+      <div class="navbar-menu">
+       
+        <div *ngIf="authService.isLoggedIn()" class="nav-links">
+          <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+            Home
+          </a>
+          <a routerLink="/my-reservations" routerLinkActive="active">
+            My Reservations
+          </a>
+
+         
+          <ng-container *ngIf="role === 'Admin'">
+            <a routerLink="/admin/dashboard" routerLinkActive="active">
+              Dashboard
+            </a>
+            <a routerLink="/admin/rooms" routerLinkActive="active">
+              Rooms Management
+            </a>
+            <a routerLink="/admin/events" routerLinkActive="active">
+              Events Management
+            </a>
+          </ng-container>
+        </div>
 
        
-        <ng-container *ngIf="role === 'Admin'">
-          <a routerLink="/admin/dashboard" routerLinkActive="active">
-            Dashboard
-          </a>
-          <a routerLink="/admin/rooms" routerLinkActive="active">
-            Rooms Management
-          </a>
-          <a routerLink="/admin/events" routerLinkActive="active">
-            Events Management
-          </a>
-        </ng-container>
-      </div>
+        <div *ngIf="authService.isLoggedIn()" class="navbar-user">
+          <span class="user-info">
+            {{ username }} <span class="user-role">({{ role }})</span>
+          </span>
+          <button class="btn-logout" (click)="logout()">Logout</button>
+        </div>
 
-      
-      <div *ngIf="authService.isLoggedIn()" class="navbar-user">
-        <span class="user-info">
-          {{ username }} <span class="user-role">({{ role }})</span>
-        </span>
-        <button class="btn-logout" (click)="logout()">Logout</button>
-      </div>
-
-     
-      <div *ngIf="!authService.isLoggedIn()" class="navbar-auth">
-        <button class="btn-login" routerLink="/login">Login</button>
-        <button class="btn-register" routerLink="/register">Register</button>
+       
+        <div *ngIf="!authService.isLoggedIn()" class="navbar-auth">
+          <button class="btn-login" routerLink="/login">Login</button>
+          <button class="btn-register" routerLink="/register">Register</button>
+        </div>
       </div>
     </div>
-  </div>
-</nav>
+  </nav>
 
-<main class="container">
-  <router-outlet></router-outlet>
-</main>
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
 
-<footer class="text-center mt-2">
-  <p>&copy; Cinepolis </p>
-</footer>
+  <footer class="footer">
+    <p>&copy; Cinepolis </p>
+  </footer>
+</div>
