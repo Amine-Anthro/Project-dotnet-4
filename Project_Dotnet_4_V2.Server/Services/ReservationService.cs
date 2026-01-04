@@ -38,19 +38,20 @@ namespace Project_Dotnet_4_V2.Server.Services
 
         public async Task<Reservation> CreateReservationAsync(CreateReservationDTO reservationDto)
         {
-            // 1. Vérifier que l'utilisateur existe
+            
             var user = await _userRepository.GetByIdAsync(reservationDto.UserId);
             if (user == null)
+            {
                 throw new KeyNotFoundException($"User with id {reservationDto.UserId} not found");
-
-            // 2. Récupérer les sièges demandés
+            }
             var seats = await _seatRepository.GetByIdsAsync(reservationDto.SeatIds);
             var seatsList = seats.ToList();
 
             if (seatsList.Count != reservationDto.SeatIds.Count)
+            {
                 throw new InvalidOperationException("Some seats were not found");
-
-            // 3. Vérifier que tous les sièges sont disponibles
+            }
+         
             var unavailableSeats = seatsList.Where(s => s.Status != SeatStatus.Available).ToList();
             if (unavailableSeats.Any())
             {
@@ -58,10 +59,10 @@ namespace Project_Dotnet_4_V2.Server.Services
                 throw new InvalidOperationException($"The following seats are not available: {unavailableIds}");
             }
 
-            // 4. Calculer le montant total
+           
             var totalAmount = seatsList.Sum(s => s.Price);
 
-            // 5. Créer la réservation
+            
             var reservation = new Reservation
             {
                 UserId = reservationDto.UserId,
@@ -75,17 +76,17 @@ namespace Project_Dotnet_4_V2.Server.Services
 
             var createdReservation = await _reservationRepository.Create(reservation);
 
-            // 6. Marquer les sièges comme réservés
+            
             foreach (var seat in seatsList)
             {
                 seat.Status = SeatStatus.Reserved;
                 seat.ReservationId = createdReservation.Id;
             }
 
-            //  SAUVEGARDER D'ABORD
+            
             await _seatRepository.UpdateRangeAsync(seatsList);
 
-            //  NOTIFIER APRÈS (quand les données sont en DB)
+            
             foreach (var seat in seatsList)
             {
                 await _notificationService.NotifySeatReservedAsync(
@@ -104,8 +105,9 @@ namespace Project_Dotnet_4_V2.Server.Services
             var reservation = await _reservationRepository.GetByIdAsync(reservationId);
 
             if (reservation == null)
+            {
                 throw new KeyNotFoundException($"Reservation with id {reservationId} not found");
-
+            }
             if (reservation.Status != ReservationStatus.InProgress)
                 throw new InvalidOperationException("Only reservations in progress can be paid");
 
@@ -120,17 +122,17 @@ namespace Project_Dotnet_4_V2.Server.Services
             reservation.Status = ReservationStatus.Paid;
             reservation.ExpiresAt = null;
 
-            // Mettre à jour les sièges
+            
             foreach (var seat in reservation.Seats)
             {
                 seat.Status = SeatStatus.Paid;
             }
 
-            //  SAUVEGARDER D'ABORD
+            
             await _seatRepository.UpdateRangeAsync(reservation.Seats);
             await _reservationRepository.UpdateAsync(reservation);
 
-            //  NOTIFIER APRÈS
+            
             foreach (var seat in reservation.Seats)
             {
                 await _notificationService.NotifySeatPaidAsync(
@@ -162,11 +164,10 @@ namespace Project_Dotnet_4_V2.Server.Services
                 seat.ReservationId = null;
             }
 
-            //  SAUVEGARDER D'ABORD
+            
             await _seatRepository.UpdateRangeAsync(reservation.Seats);
             await _reservationRepository.UpdateAsync(reservation);
 
-            //  NOTIFIER APRÈS
             foreach (var seat in reservation.Seats)
             {
                 await _notificationService.NotifySeatReleasedAsync(
@@ -195,11 +196,9 @@ namespace Project_Dotnet_4_V2.Server.Services
                     seat.ReservationId = null;
                 }
 
-                // SAUVEGARDER D'ABORD
                 await _seatRepository.UpdateRangeAsync(reservation.Seats);
                 await _reservationRepository.UpdateAsync(reservation);
 
-                //  NOTIFIER APRÈS
                 foreach (var seat in reservation.Seats)
                 {
                     await _notificationService.NotifySeatReleasedAsync(

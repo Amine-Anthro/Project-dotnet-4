@@ -33,8 +33,7 @@ builder.Services.AddScoped<IReservationService, ReservationService>();
 builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
-//  Je mets en Singleton (car il a besoin de IDashboardService qui a besoin du DbContext)
-// On va injecter IServiceProvider à la place
+
 builder.Services.AddSingleton<IEventNotificationService>(sp =>
 {
     var hubContext = sp.GetRequiredService<IHubContext<EventHub>>();
@@ -99,18 +98,18 @@ builder.Services.AddAuthentication(
     {
         options.TokenValidationParameters = new TokenValidationParameters()
         {
-            ValidateActor = true, // identifier les parties
-            ValidateAudience = true, // empecher les attaques par rejeu => un site ne peut pas rejouer un token sur un autre site
-            ValidateLifetime = true, // limiter la durée de vie du token
-            ValidateIssuerSigningKey = true, // demande l'utilisation de signature
-            ValidIssuer = builder.Configuration["Jwt:Issuer"], // emetteur du token
-            ValidAudience = builder.Configuration["Jwt:Audience"], // receveur du token
+            ValidateActor = true,
+            ValidateAudience = true,
+            ValidateLifetime = true, 
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"], 
+            ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(
     Encoding.UTF8.GetBytes(
         builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT signing key is not configured.")
     )
-), // récupérer la clé de chiffrement
-            ClockSkew = TimeSpan.Zero, // par défaut c'est 5 minutes. Il s'agit de l'écart de temps autorisé entre l'heure du client et celle du serveur
+), 
+            ClockSkew = TimeSpan.Zero,
             RoleClaimType = ClaimTypes.Role,
             NameClaimType = ClaimTypes.Name
         };
@@ -120,7 +119,7 @@ builder.Services.AddAuthentication(
 
 builder.Services.AddAuthorization(options =>
 {
-    // stratégies complexe avec handler et requirement
+   
     options.AddPolicy("canManageMovie",
         policy =>
             policy.AddRequirements(
@@ -131,7 +130,7 @@ builder.Services.AddAuthorization(options =>
 
 
 
-    // stratégies simples
+   
     options.AddPolicy("BossOnly", policy => policy.RequireClaim("Boss"));
     options.AddPolicy("SuperIT",
         policy => policy.RequireClaim("Permission", "IT")
@@ -144,7 +143,7 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
 
 
-    // stratégies complèxes => lambda / handler-Requirements (class)
+    
     options.AddPolicy("BossOrEmail", policy =>
     {
         policy.RequireAssertion(context =>
@@ -213,9 +212,9 @@ app.Use(async (context, next) =>
         Console.WriteLine($"=== User is NOT authenticated");
     }
 });
-// ATTENTION L'ORDRE EST SUPER IMPORTANT
-app.UseAuthentication(); // savoir à qui on a à faire
-app.UseAuthorization(); // savoir ce qu'on peut faire 
+
+app.UseAuthentication(); 
+app.UseAuthorization(); 
 
 app.UseHttpsRedirection();
 

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from './services/auth.service';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-root',  
@@ -18,6 +20,13 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.updateUserInfo();
+
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.updateUserInfo();
+    });
+  
   }
 
   updateUserInfo(): void {

@@ -40,8 +40,8 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
         console.log('Initial stats loaded:', this.stats);
       },
       error: (error) => {
-        console.error('Erreur lors du chargement des stats', error);
-        this.errorMessage = 'Impossible de charger les statistiques';
+        console.error('Error when loading the stats', error);
+        this.errorMessage = 'Impossible to load the stats';
         this.isLoading = false;
       }
     });

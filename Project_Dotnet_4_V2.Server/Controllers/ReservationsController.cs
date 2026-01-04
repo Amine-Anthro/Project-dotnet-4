@@ -19,9 +19,7 @@ namespace Project_Dotnet_4_V2.Controllers
             _ticketService = ticketService;
         }
 
-        /// <summary>
-        /// Récupérer toutes les réservations (Admin uniquement)
-        /// </summary>
+        
         [Authorize(Policy = "AdminOnly")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Reservation>>> GetAllReservations()
@@ -30,14 +28,12 @@ namespace Project_Dotnet_4_V2.Controllers
             return Ok(reservations);
         }
 
-        /// <summary>
-        /// Récupérer les réservations de l'utilisateur connecté
-        /// </summary>
+        
         [Authorize]
         [HttpGet("my-reservations")]
         public async Task<ActionResult<IEnumerable<Reservation>>> GetMyReservations()
         {
-            // Récupérer l'ID de l'utilisateur depuis le token JWT
+            
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
@@ -49,9 +45,7 @@ namespace Project_Dotnet_4_V2.Controllers
             return Ok(reservations);
         }
 
-        /// <summary>
-        /// Récupérer les réservations d'un utilisateur spécifique (Admin uniquement)
-        /// </summary>
+       
         [Authorize(Policy = "AdminOnly")]
         [HttpGet("user/{userId}")]
         public async Task<ActionResult<IEnumerable<Reservation>>> GetReservationsByUserId(int userId)
@@ -60,9 +54,7 @@ namespace Project_Dotnet_4_V2.Controllers
             return Ok(reservations);
         }
 
-        /// <summary>
-        /// Récupérer une réservation par ID
-        /// </summary>
+        
         [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Reservation>> GetReservationById(int id)
@@ -72,7 +64,7 @@ namespace Project_Dotnet_4_V2.Controllers
             if (reservation == null)
                 return NotFound(new { message = "Reservation not found" });
 
-            // Vérifier que l'utilisateur est propriétaire ou admin
+            
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
 
@@ -80,21 +72,19 @@ namespace Project_Dotnet_4_V2.Controllers
                 return Unauthorized();
 
             if (reservation.UserId != userId && userRole != "Admin")
-                return Forbid(); // 403 Forbidden
+                return Forbid(); 
 
             return Ok(reservation);
         }
 
-        /// <summary>
-        /// Créer une nouvelle réservation
-        /// </summary>
+        
         [Authorize]
         [HttpPost]
         public async Task<ActionResult<Reservation>> CreateReservation(CreateReservationDTO reservationDto)
         {
             try
             {
-                // Vérifier que l'utilisateur réserve pour lui-même (sauf admin)
+                
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
 
@@ -119,9 +109,7 @@ namespace Project_Dotnet_4_V2.Controllers
             }
         }
 
-        /// <summary>
-        /// Confirmer le paiement d'une réservation
-        /// </summary>
+       
         [Authorize]
         [HttpPost("{id}/confirm-payment")]
         public async Task<ActionResult<Reservation>> ConfirmPayment(int id)
@@ -133,7 +121,6 @@ namespace Project_Dotnet_4_V2.Controllers
                 if (reservation == null)
                     return NotFound(new { message = "Reservation not found" });
 
-                // Vérifier que l'utilisateur est propriétaire ou admin
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
 
@@ -156,9 +143,7 @@ namespace Project_Dotnet_4_V2.Controllers
             }
         }
 
-        /// <summary>
-        /// Annuler une réservation
-        /// </summary>
+      
         [Authorize]
         [HttpPost("{id}/cancel")]
         public async Task<ActionResult> CancelReservation(int id)
@@ -170,7 +155,7 @@ namespace Project_Dotnet_4_V2.Controllers
                 if (reservation == null)
                     return NotFound(new { message = "Reservation not found" });
 
-                // Vérifier que l'utilisateur est propriétaire ou admin
+               
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
 
@@ -193,9 +178,7 @@ namespace Project_Dotnet_4_V2.Controllers
             }
         }
 
-        /// <summary>
-        /// Télécharger le billet PDF
-        /// </summary>
+       
         [Authorize]
         [HttpGet("{id}/ticket/pdf")]
         public async Task<IActionResult> DownloadTicketPdf(int id)
@@ -207,7 +190,6 @@ namespace Project_Dotnet_4_V2.Controllers
                 if (reservation == null)
                     return NotFound(new { message = "Reservation not found" });
 
-                // Vérifier que l'utilisateur est propriétaire ou admin
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
 
@@ -231,9 +213,7 @@ namespace Project_Dotnet_4_V2.Controllers
             }
         }
 
-        /// <summary>
-        /// Obtenir le QR code en base64
-        /// </summary>
+        
         [Authorize]
         [HttpGet("{id}/ticket/qrcode")]
         public async Task<IActionResult> GetQRCode(int id)
@@ -245,7 +225,6 @@ namespace Project_Dotnet_4_V2.Controllers
                 if (reservation == null)
                     return NotFound(new { message = "Reservation not found" });
 
-                // Vérifier que l'utilisateur est propriétaire ou admin
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
 

@@ -15,20 +15,20 @@ export const adminGuard: CanActivateFn = (route, state) => {
 
   token = token.trim().replace(/^["']|["']$/g, '').replace('Bearer ', '');
 
-  console.log('Token nettoyé:', token);
-  // Décode le token JWT pour vérifier le rôle
+  console.log('Token cleaned :', token);
+ 
   try {
     const payload = JSON.parse(atob(token.split('.')[1]));
 
-    console.log('Token payload complet:', payload);
-    console.log('Toutes les clés:', Object.keys(payload));
+    console.log('Token payload :', payload);
+    console.log('keys:', Object.keys(payload));
 
-    // Vérifier si le rôle est Admin
+    
     const role = payload['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
       || payload['role']
       || payload['Role']
 
-    console.log('Rôle trouvé:', role);
+    console.log('Role found:', role);
 
     if (role === 'Admin') {
       return true;

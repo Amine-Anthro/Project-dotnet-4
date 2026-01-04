@@ -14,7 +14,7 @@ export interface SeatUpdate {
 export class SignalrService {
   private hubConnection?: signalR.HubConnection;
 
-  // Observables pour les mises à jour
+  
   public seatReserved$ = new Subject<SeatUpdate>();
   public seatReleased$ = new Subject<SeatUpdate>();
   public seatPaid$ = new Subject<SeatUpdate>();
@@ -52,7 +52,7 @@ export class SignalrService {
     if (!this.hubConnection) return;
 
     this.hubConnection.on('SeatReserved', (data: SeatUpdate) => {
-      this.ngZone.run(() => {  // Exécuter dans la zone Angular
+      this.ngZone.run(() => { 
         console.log('Seat reserved:', data);
         this.seatReserved$.next(data);
       });
@@ -92,7 +92,7 @@ export class SignalrService {
 
   public leaveDashboard(): Promise<void> {
     if (!this.hubConnection || this.hubConnection.state !== signalR.HubConnectionState.Connected) {
-      console.warn('⚠️ Cannot leave dashboard: not connected');
+      console.warn(' Cannot leave dashboard: not connected');
       return Promise.resolve();
     }
 

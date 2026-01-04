@@ -17,9 +17,7 @@ namespace Project_Dotnet_4_V2.Server.Controllers
             _dashboardService = dashboardService;
         }
 
-        /// <summary>
-        /// Obtenir les statistiques globales
-        /// </summary>
+    
         [HttpGet("stats")]
         public async Task<IActionResult> GetDashboardStats()
         {
@@ -27,9 +25,7 @@ namespace Project_Dotnet_4_V2.Server.Controllers
             return Ok(stats);
         }
 
-        /// <summary>
-        /// Obtenir les statistiques d'un événement spécifique
-        /// </summary>
+       
         [HttpGet("events/{eventId}/stats")]
         public async Task<IActionResult> GetEventStats(int eventId)
         {

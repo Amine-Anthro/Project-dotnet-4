@@ -84,6 +84,3 @@ export class AuthService {
 }
 
 
-export class Auth {
-
-}

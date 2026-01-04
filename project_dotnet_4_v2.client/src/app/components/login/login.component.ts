@@ -21,7 +21,7 @@ export class Login {
 
   onLogin(): void {
     if (!this.username || !this.password) {
-      this.errorMessage = 'Faut remplir tout les champs frérot ou soeurette';
+      this.errorMessage = 'Complete all the fields please';
       return;
     }
 
@@ -30,13 +30,13 @@ export class Login {
 
     this.authService.login(this.username, this.password).subscribe({
       next: (token: any) => {
-        console.log('Le ou la gigachad est bien login', token);
+        console.log('Login successfully', token);
         this.isLoading = false;
         this.router.navigate(['/home'])
       },
       error: (error: any) => {
-        console.error('Nan le login a eu une embrouille (-1000 aura)', error);
-        this.errorMessage = 'Askip tes indentifiants sont invalides, tu pues sa mère';
+        console.error('Error on the login', error);
+        this.errorMessage = 'Invalid username or password, please retry';
         this.isLoading = false;
       }
     });

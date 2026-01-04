@@ -54,12 +54,10 @@ namespace Project_Dotnet_4_V2.Server.Services
                 throw new KeyNotFoundException($"Room with id {id} not found");
 
             room.Name = roomDto.Name;
-            room.Capacity = roomDto.Capacity;
             room.EconomicPrice = roomDto.EconomicPrice;
             room.VipPrice = roomDto.VipPrice;
             room.StandardPrice = roomDto.StandardPrice;
-            room.TotalRows = roomDto.TotalRows;
-            room.SeatsPerRow = roomDto.SeatsPerRow;
+            
 
             await _roomRepository.UpdateAsync(room);
         }

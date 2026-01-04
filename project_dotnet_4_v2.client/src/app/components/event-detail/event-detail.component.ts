@@ -40,12 +40,10 @@ export class EventDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    
     this.seatReservedSub?.unsubscribe();
     this.seatReleasedSub?.unsubscribe();
     this.seatPaidSub?.unsubscribe();
 
-  
     if (this.event) {
       this.signalrService.leaveEventRoom(this.event.id);
     }
@@ -53,13 +51,9 @@ export class EventDetailComponent implements OnInit, OnDestroy {
 
   async connectToSignalR(eventId: number): Promise<void> {
     try {
-      // Démarrer la connexion (si pas déjà fait)
       await this.signalrService.startConnection();
-
-      // Rejoindre la room de l'événement
       await this.signalrService.joinEventRoom(eventId);
 
-      // Écouter les mises à jour de sièges
       this.seatReservedSub = this.signalrService.seatReserved$.subscribe(
         (update: SeatUpdate) => this.handleSeatReserved(update)
       );
@@ -72,24 +66,24 @@ export class EventDetailComponent implements OnInit, OnDestroy {
         (update: SeatUpdate) => this.handleSeatPaid(update)
       );
 
-      console.log(' SignalR connected and listening');
+      console.log('SignalR connected and listening');
     } catch (error) {
-      console.error(' SignalR connection error:', error);
+      console.error('SignalR connection error:', error);
     }
   }
 
   handleSeatReserved(update: SeatUpdate): void {
-    console.log(' Seat reserved:', update);
+    console.log('Seat reserved:', update);
     this.updateSeatStatus(update.seatId, 1); 
   }
 
   handleSeatReleased(update: SeatUpdate): void {
-    console.log(' Seat released:', update);
+    console.log('Seat released:', update);
     this.updateSeatStatus(update.seatId, 0); 
   }
 
   handleSeatPaid(update: SeatUpdate): void {
-    console.log(' Seat paid:', update);
+    console.log('Seat paid:', update);
     this.updateSeatStatus(update.seatId, 2); 
   }
 
@@ -100,13 +94,12 @@ export class EventDetailComponent implements OnInit, OnDestroy {
     if (seat) {
       seat.status = newStatus;
 
-      
       if (newStatus !== 0) {
         const index = this.selectedSeats.findIndex(s => s.id === seatId);
         if (index !== -1) {
           this.selectedSeats.splice(index, 1);
           this.calculateTotal();
-          this.errorMessage = `Le siège ${seat.row}${seat.number} vient d'être réservé par un autre utilisateur`;
+          this.errorMessage = `Seat ${seat.row}${seat.number} has just been reserved by another user`;
           setTimeout(() => this.errorMessage = '', 3000);
         }
       }
@@ -120,8 +113,8 @@ export class EventDetailComponent implements OnInit, OnDestroy {
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Erreur lors du chargement de l\'événement', error);
-        this.errorMessage = 'Impossible de charger les détails de l\'événement';
+        console.error('Error loading event', error);
+        this.errorMessage = 'Unable to load event details';
         this.isLoading = false;
       }
     });
@@ -139,7 +132,6 @@ export class EventDetailComponent implements OnInit, OnDestroy {
       seatsByRow[seat.row].push(seat);
     });
 
-    
     Object.keys(seatsByRow).forEach(row => {
       seatsByRow[row].sort((a, b) => Number(a.number) - Number(b.number));
     });
@@ -176,40 +168,38 @@ export class EventDetailComponent implements OnInit, OnDestroy {
       default: return '';
     }
   }
+
   isSeatSelected(seat: Seat): boolean {
     return this.selectedSeats.some(s => s.id === seat.id);
   }
 
   toggleSeat(seat: Seat): void {
-    if (seat.status !== 0) { // Unavaiable
+    if (seat.status !== 0) { 
       return; 
     }
-    // en gros si ta place-là, elle est déjà sélectionné (pendant que tu choisis où tu vas poser ton cul)
+   
     if (this.isSeatSelected(seat)) {
-      // on la dégage de la liste des places déjà select
       this.selectedSeats = this.selectedSeats.filter(s => s.id !== seat.id);
     } else {
-      // sinon on la met dans la liste 
       this.selectedSeats.push(seat);
     }
 
     this.calculateTotal();
   }
 
-  // il compte en accumulant les prix des sièges, comme un cpt 
   calculateTotal(): void {
     this.totalPrice = this.selectedSeats.reduce((sum, seat) => sum + seat.price, 0);
   }
 
   proceedToReservation(): void {
     if (this.selectedSeats.length === 0) {
-      alert('Veuillez sélectionner au moins un siège');
+      alert('Please select at least one seat');
       return;
     }
-    // Récupérer l'userId depuis le token
+   
     const token = this.authService.getToken();
     if (!token) {
-      this.errorMessage = 'Session expirée';
+      this.errorMessage = 'Session expired';
       this.isProcessing = false;
       return;
     }
@@ -225,27 +215,25 @@ export class EventDetailComponent implements OnInit, OnDestroy {
 
     this.reservationService.createReservation(reservationDto).subscribe({
       next: (reservation) => {
-        this.successMessage = `Réservation créée avec succès ! (ID: ${reservation.id})`;
+        this.successMessage = `Reservation created successfully! (ID: ${reservation.id})`;
         this.isProcessing = false;
 
-        // Rediriger vers la page de paiement après 2 secondes
         setTimeout(() => {
           this.router.navigate(['/payment', reservation.id]);
         }, 2000);
       },
       error: (error) => {
-        console.error('Erreur lors de la réservation', error);
-        this.errorMessage = error.error?.message || 'Erreur lors de la réservation';
+        console.error('Error creating reservation', error);
+        this.errorMessage = error.error?.message || 'Error creating reservation';
         this.isProcessing = false;
         this.loadEventDetails(this.event!.id);
       }
     });
     
-    console.log('Réservation de', this.selectedSeats.length, 'siège(s)');
-    console.log('Prix total:', this.totalPrice, '€');
+    console.log('Reserving', this.selectedSeats.length, 'seat(s)');
+    console.log('Total price:', this.totalPrice, '$');
 
-   
-    alert(`Réservation de ${this.selectedSeats.length} siège(s) pour ${this.totalPrice.toFixed(2)}€`);
+    alert(`Reservation of ${this.selectedSeats.length} seat(s) for $${this.totalPrice.toFixed(2)}`);
   }
 
   goBack(): void {

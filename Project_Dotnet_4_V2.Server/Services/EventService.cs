@@ -28,7 +28,7 @@ namespace Project_Dotnet_4_V2.Server.Services
 
         public async Task<Event> CreateEventAsync(CreateEventDTO eventDto)
         {
-            // Vérifier que la salle existe
+           
             if (!await _roomRepository.ExistsAsync(eventDto.RoomId))
             {
                 throw new KeyNotFoundException($"Room with id {eventDto.RoomId} not found");
@@ -57,7 +57,7 @@ namespace Project_Dotnet_4_V2.Server.Services
             if (eventItem == null)
                 throw new KeyNotFoundException($"Event with id {id} not found");
 
-            // Vérifier que la nouvelle salle existe si elle a changé
+            
             if (eventDto.RoomId != eventItem.RoomId)
             {
                 if (!await _roomRepository.ExistsAsync(eventDto.RoomId))

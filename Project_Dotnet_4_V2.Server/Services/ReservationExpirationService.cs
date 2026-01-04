@@ -35,8 +35,8 @@ namespace Project_Dotnet_4_V2.Server.Services
                     _logger.LogError(ex, "Error checking expired reservations");
                 }
 
-                // Vérifier toutes les 1 secondes
-                await Task.Delay(TimeSpan.FromSeconds(60), stoppingToken);
+               
+                await Task.Delay(TimeSpan.FromSeconds(1), stoppingToken);
             }
 
             _logger.LogInformation(" Reservation Expiration Service stopped");
@@ -44,13 +44,9 @@ namespace Project_Dotnet_4_V2.Server.Services
 
         private async Task CheckExpiredReservationsAsync()
         {
-            //  Créer un scope pour les services scoped
+           
             using var scope = _serviceProvider.CreateScope();
-
-            // Récupérer le service (pas le DbContext directement !)
             var reservationService = scope.ServiceProvider.GetRequiredService<IReservationService>();
-
-            // Déléguer toute la logique au service
             await reservationService.CancelExpiredReservationsAsync();
 
             _logger.LogInformation(" Expired reservations checked");

@@ -7,13 +7,11 @@ import { AuthService, RegisterRequest } from '../../services/auth.service';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-
 export class Register {
   username: string = '';
   password: string = '';
   confirmPassword: string = '';
   email: string = '';
-
   errorMessage: string = '';
   successMessage: string = '';
   isLoading: boolean = false;
@@ -24,19 +22,18 @@ export class Register {
   ) { }
 
   onRegister(): void {
-
     if (!this.username || !this.password || !this.email) {
-      this.errorMessage = 'Rempli tous les champs stp';
+      this.errorMessage = 'Please fill in all fields';
       return;
     }
 
     if (this.password !== this.confirmPassword) {
-      this.errorMessage = ' HAHA le nul il sait pas écrire son mot de passe de fois de suite';
+      this.errorMessage = 'Passwords do not match';
       return;
     }
 
     if (this.password.length < 6) {
-      this.errorMessage = 'Le mot de passe est aussi court que ton ... bref il doit faire plus de 6 caractères';
+      this.errorMessage = 'Password must be at least 6 characters long';
       return;
     }
 
@@ -48,13 +45,13 @@ export class Register {
       username: this.username,
       password: this.password,
       email: this.email,
-      role: 'Client'  // Rôle par défaut
+      role: 'Client'
     };
 
     this.authService.register(userData).subscribe({
       next: (response) => {
-        console.log('Inscription réussie gg !', response);
-        this.successMessage = 'Inscription réussie ! Redirection...';
+        console.log('Registration successful!', response);
+        this.successMessage = 'Registration successful! Redirecting...';
         this.isLoading = false;
 
         setTimeout(() => {
@@ -62,8 +59,8 @@ export class Register {
         }, 2000);
       },
       error: (error) => {
-        console.error('Erreur d\'inscription', error);
-        this.errorMessage = 'Erreur lors de l\'inscription. Veuillez réessayer.';
+        console.error('Registration error', error);
+        this.errorMessage = 'Error during registration. Please try again.';
         this.isLoading = false;
       }
     });

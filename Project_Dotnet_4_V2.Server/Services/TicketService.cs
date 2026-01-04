@@ -21,7 +21,6 @@ namespace Project_Dotnet_4_V2.Server.Services
         {
             _reservationRepository = reservationRepository;
           
-            // Licence QuestPDF 
             QuestPDF.Settings.License = LicenseType.Community;
         }
         public async Task<string> GenerateQRCodeAsync(int reservationId)
@@ -31,7 +30,6 @@ namespace Project_Dotnet_4_V2.Server.Services
             if (reservation == null)
                 return string.Empty;
 
-            // Version JSON structurée
             var qrData = new
             {
                 Type = "MisterTicket",
@@ -79,7 +77,6 @@ namespace Project_Dotnet_4_V2.Server.Services
             byte[] qrCodeBytes = Convert.FromBase64String(qrCodeBase64);
 
 
-            // Créer le PDF
             var document = Document.Create(container =>
             {
                 container.Page(page =>

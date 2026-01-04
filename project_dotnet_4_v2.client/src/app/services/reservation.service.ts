@@ -21,8 +21,8 @@ export interface Seat {
   number: string;
   row: string;
   roomId: number;
-  status: number; // 0=Available, 1=Reserved, 2=Paid
-  zone: number; // 0=Economic, 1=VIP, 2=Standard
+  status: number;
+  zone: number; 
   price: number;
   reservationId?: number;
 }
@@ -74,7 +74,7 @@ export class ReservationService {
   downloadTicketPdf(reservationId: number): Observable<Blob> {
     return this.http.get(`${this.apiUrl}/${reservationId}/ticket/pdf`, {
       headers: this.getHeaders(),
-      responseType: 'blob' // Important pour télécharger un fichier
+      responseType: 'blob' 
     });
   }
 

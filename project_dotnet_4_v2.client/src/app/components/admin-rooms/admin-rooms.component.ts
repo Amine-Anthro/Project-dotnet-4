@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RoomService, Room, CreateRoomDTO } from '../../services/room.service';
+
 @Component({
   selector: 'app-admin-rooms',
   templateUrl: './admin-rooms.component.html',
@@ -11,7 +12,6 @@ export class AdminRoomsComponent implements OnInit {
   errorMessage = '';
   successMessage = '';
 
-  
   showForm = false;
   isEditing = false;
   currentRoomId?: number;
@@ -40,7 +40,7 @@ export class AdminRoomsComponent implements OnInit {
         this.isLoading = false;
       },
       error: (error) => {
-        this.errorMessage = 'Erreur lors du chargement des salles';
+        this.errorMessage = 'Error loading rooms';
         this.isLoading = false;
       }
     });
@@ -90,41 +90,39 @@ export class AdminRoomsComponent implements OnInit {
     this.successMessage = '';
 
     if (this.isEditing && this.currentRoomId) {
-      
       this.roomService.updateRoom(this.currentRoomId, this.roomForm).subscribe({
         next: () => {
-          this.successMessage = 'Salle modifiée avec succès';
+          this.successMessage = 'Room updated successfully';
           this.closeForm();
           this.loadRooms();
         },
         error: (error) => {
-          this.errorMessage = 'Erreur lors de la modification';
+          this.errorMessage = 'Error updating room';
         }
       });
     } else {
-      
       this.roomService.createRoom(this.roomForm).subscribe({
         next: () => {
-          this.successMessage = 'Salle créée avec succès';
+          this.successMessage = 'Room created successfully';
           this.closeForm();
           this.loadRooms();
         },
         error: (error) => {
-          this.errorMessage = 'Erreur lors de la création';
+          this.errorMessage = 'Error creating room';
         }
       });
     }
   }
 
   deleteRoom(id: number, roomNumber: string): void {
-    if (confirm(`Êtes-vous sûr de vouloir supprimer la salle ${roomNumber} ?`)) {
+    if (confirm(`Are you sure you want to delete room ${roomNumber}?`)) {
       this.roomService.deleteRoom(id).subscribe({
         next: () => {
-          this.successMessage = 'Salle supprimée avec succès';
+          this.successMessage = 'Room deleted successfully';
           this.loadRooms();
         },
         error: (error) => {
-          this.errorMessage = 'Erreur lors de la suppression';
+          this.errorMessage = 'Error deleting room';
         }
       });
     }

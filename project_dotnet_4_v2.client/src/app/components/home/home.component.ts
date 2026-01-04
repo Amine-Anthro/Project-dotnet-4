@@ -28,8 +28,8 @@ export class Home implements OnInit {
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Erreur lors du chargement des événements', error);
-        this.errorMessage = 'Impossible de charger les événements';
+        console.error('Error in the loading the events ', error);
+        this.errorMessage = 'Impossible to load the events';
         this.isLoading = false;
       }
     });

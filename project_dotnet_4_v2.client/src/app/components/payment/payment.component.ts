@@ -14,7 +14,6 @@ export class PaymentComponent implements OnInit {
   errorMessage = '';
   successMessage = '';
 
-  // Formulaire de paiement fictif
   cardNumber: string = '';
   cardName: string = '';
   cardExpiry: string = '';
@@ -31,14 +30,11 @@ export class PaymentComponent implements OnInit {
     this.loadReservation(reservationId);
   }
 
-  
-
- 
   private getStatusValue(status: string | number): number {
     if (typeof status === 'number') {
       return status;
     }
-    // Convertir string en nombre
+
     switch (status) {
       case 'InProgress': return 0;
       case 'Paid': return 1;
@@ -54,17 +50,15 @@ export class PaymentComponent implements OnInit {
 
         const statusValue = this.getStatusValue(data.status);
 
-        // Vérifier si déjà payée
         if (statusValue === 1) {
-          this.errorMessage = 'Cette réservation a déjà été payée';
+          this.errorMessage = 'This reservation has already been paid';
           setTimeout(() => {
             this.router.navigate(['/my-reservations']);
           }, 2000);
         }
 
-        // Vérifier si annulée
         if (statusValue === 2 || data.status === 'Cancelled') {
-          this.errorMessage = 'Cette réservation a été annulée';
+          this.errorMessage = 'This reservation has been cancelled';
           setTimeout(() => {
             this.router.navigate(['/home']);
           }, 2000);
@@ -73,8 +67,8 @@ export class PaymentComponent implements OnInit {
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Erreur lors du chargement de la réservation', error);
-        this.errorMessage = 'Impossible de charger la réservation';
+        console.error('Error loading reservation', error);
+        this.errorMessage = 'Unable to load reservation';
         this.isLoading = false;
       }
     });
@@ -88,21 +82,19 @@ export class PaymentComponent implements OnInit {
     this.isProcessing = true;
     this.errorMessage = '';
 
-    // Simulation d'un délai de traitement (1.5 secondes)
     setTimeout(() => {
       this.reservationService.confirmPayment(this.reservation!.id).subscribe({
         next: (updatedReservation) => {
-          this.successMessage = 'Paiement confirmé ! Redirection...';
+          this.successMessage = 'Payment confirmed! Redirecting...';
           this.isProcessing = false;
 
-          // Redirection vers "Mes réservations" après 2 secondes
           setTimeout(() => {
             this.router.navigate(['/my-reservations']);
           }, 2000);
         },
         error: (error) => {
-          console.error('Erreur lors du paiement', error);
-          this.errorMessage = error.error?.message || 'Erreur lors du paiement';
+          console.error('Error processing payment', error);
+          this.errorMessage = error.error?.message || 'Error processing payment';
           this.isProcessing = false;
         }
       });
@@ -110,40 +102,39 @@ export class PaymentComponent implements OnInit {
   }
 
   validatePayment(): boolean {
-   
-      if (!this.cardNumber || this.cardNumber.length !== 16) {
-        this.errorMessage = 'Numéro de carte invalide (16 chiffres requis)';
-        return false;
-      }
-      if (!this.cardName) {
-        this.errorMessage = 'Nom du titulaire requis';
-        return false;
-      }
-      if (!this.cardExpiry || !/^\d{2}\/\d{2}$/.test(this.cardExpiry)) {
-        this.errorMessage = 'Date d\'expiration invalide (MM/YY)';
-        return false;
-      }
-      if (!this.cardCVV || this.cardCVV.length !== 3) {
-        this.errorMessage = 'CVV invalide (3 chiffres)';
-        return false;
-      }
-    
+    if (!this.cardNumber || this.cardNumber.length !== 16) {
+      this.errorMessage = 'Invalid card number (16 digits required)';
+      return false;
+    }
+    if (!this.cardName) {
+      this.errorMessage = 'Cardholder name required';
+      return false;
+    }
+    if (!this.cardExpiry || !/^\d{2}\/\d{2}$/.test(this.cardExpiry)) {
+      this.errorMessage = 'Invalid expiration date (MM/YY)';
+      return false;
+    }
+    if (!this.cardCVV || this.cardCVV.length !== 3) {
+      this.errorMessage = 'Invalid CVV (3 digits)';
+      return false;
+    }
+
     return true;
   }
 
   cancelReservation(): void {
-    if (!confirm('Êtes-vous sûr de vouloir annuler cette réservation ?')) {
+    if (!confirm('Are you sure you want to cancel this reservation?')) {
       return;
     }
 
     this.reservationService.cancelReservation(this.reservation!.id).subscribe({
       next: () => {
-        alert('Réservation annulée avec succès');
+        alert('Reservation cancelled successfully');
         this.router.navigate(['/home']);
       },
       error: (error) => {
-        console.error('Erreur lors de l\'annulation', error);
-        this.errorMessage = 'Erreur lors de l\'annulation';
+        console.error('Error cancelling reservation', error);
+        this.errorMessage = 'Error cancelling reservation';
       }
     });
   }
@@ -157,7 +148,7 @@ export class PaymentComponent implements OnInit {
     const minutes = Math.floor(diff / 60000);
     const seconds = Math.floor((diff % 60000) / 1000);
 
-    if (minutes < 0) return 'Expiré';
+    if (minutes < 0) return 'Expired';
     return `${minutes}m ${seconds}s`;
   }
 
@@ -176,9 +167,9 @@ export class PaymentComponent implements OnInit {
     const statusValue = this.getStatusValue(status);
 
     switch (statusValue) {
-      case 0: return 'En attente de paiement';
-      case 1: return 'Payée';
-      case 2: return 'Annulée';
+      case 0: return 'Pending payment';
+      case 1: return 'Paid';
+      case 2: return 'Cancelled';
       default: return String(status);
     }
   }
@@ -190,7 +181,7 @@ export class PaymentComponent implements OnInit {
 
   getZoneName(zone: number): string {
     switch (zone) {
-      case 0: return 'Économique';
+      case 0: return 'Economic';
       case 1: return 'VIP';
       case 2: return 'Standard';
       default: return '';

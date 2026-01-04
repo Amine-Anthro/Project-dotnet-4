@@ -130,21 +130,21 @@ export class MyReservationsComponent implements OnInit {
     });
   }
 
-  downloadingTickets: Set<number> = new Set(); // Pour tracker les téléchargements en cours
+  downloadingTickets: Set<number> = new Set(); 
 
   downloadTicket(reservationId: number): void {
     this.downloadingTickets.add(reservationId);
 
     this.reservationService.downloadTicketPdf(reservationId).subscribe({
       next: (blob) => {
-        // Créer un lien de téléchargement
+        
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
         link.download = `Ticket-Reservation-${reservationId}.pdf`;
         link.click();
 
-        // Nettoyer
+       
         window.URL.revokeObjectURL(url);
         this.downloadingTickets.delete(reservationId);
 
@@ -164,7 +164,7 @@ export class MyReservationsComponent implements OnInit {
   viewQRCode(reservationId: number): void {
     this.reservationService.getQRCode(reservationId).subscribe({
       next: (response) => {
-        // Afficher le QR code dans une modal
+       
         this.showQRCodeModal(response.qrCode, reservationId);
       },
       error: (error) => {
@@ -175,8 +175,7 @@ export class MyReservationsComponent implements OnInit {
   }
 
   showQRCodeModal(qrCodeBase64: string, reservationId: number): void {
-    // Simple alert avec image (pour commencer)
-    // On va créer une vraie modal après
+    
     const modal = document.createElement('div');
     modal.style.cssText = `
       position: fixed;
@@ -210,7 +209,7 @@ export class MyReservationsComponent implements OnInit {
 
     document.body.appendChild(modal);
 
-    // Fermer au clic
+   
     modal.addEventListener('click', (e) => {
       if (e.target === modal || (e.target as HTMLElement).id === 'closeModal') {
         document.body.removeChild(modal);

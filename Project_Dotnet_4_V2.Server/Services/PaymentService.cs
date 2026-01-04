@@ -17,7 +17,7 @@ namespace Project_Dotnet_4_V2.Server.Services
 
         public string GeneratePaymentReference()
         {
-            // Générer une référence unique
+           
             return $"PAY-{DateTime.UtcNow:yyyyMMdd}-{Guid.NewGuid().ToString().Substring(0, 8).ToUpper()}";
         }
 
@@ -33,12 +33,12 @@ namespace Project_Dotnet_4_V2.Server.Services
             {
                 throw new InvalidOperationException("Only reservations in progress can be paid");
             }
-            // Vérifier si un paiement existe déjà
+            
             var existingPayment = await _paymentRepository.GetByReservationIdAsync(reservationId);
             if (existingPayment != null && existingPayment.Status == PaymentStatus.Completed)
                 throw new InvalidOperationException("This reservation has already been paid");
 
-            // Créer le paiement
+            
             var payment = new Payment
             {
                 ReservationId = reservationId,
@@ -46,7 +46,7 @@ namespace Project_Dotnet_4_V2.Server.Services
                 Status = PaymentStatus.Completed,
                 Reference = GeneratePaymentReference(),
                 PaymentMethod = paymentMethod,
-                TransactionId = Guid.NewGuid().ToString(), // ID de transaction fictif
+                TransactionId = Guid.NewGuid().ToString(),
                 CreatedAt = DateTime.UtcNow,
                 CompletedAt = DateTime.UtcNow
             };

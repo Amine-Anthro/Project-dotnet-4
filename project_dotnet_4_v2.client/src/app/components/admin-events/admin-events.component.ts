@@ -14,7 +14,7 @@ export class AdminEventsComponent implements OnInit {
   errorMessage = '';
   successMessage = '';
 
-  // Pour le formulaire
+  
   showForm = false;
   isEditing = false;
   currentEventId?: number;
@@ -114,40 +114,40 @@ export class AdminEventsComponent implements OnInit {
     this.successMessage = '';
 
     if (this.isEditing && this.currentEventId) {
-      // Modification
+
       this.eventService.updateEvent(this.currentEventId, this.eventForm).subscribe({
         next: () => {
-          this.successMessage = 'Événement modifié avec succès';
+          this.successMessage = 'Success, event modified';
           this.closeForm();
           this.loadEvents();
         },
         error: (error) => {
-          this.errorMessage = 'Erreur lors de la modification';
+          this.errorMessage = 'Error in the modification';
         }
       });
     } else {
       this.eventService.createEvent(this.eventForm).subscribe({
         next: () => {
-          this.successMessage = 'Événement créé avec succès';
+          this.successMessage = 'Success, event created';
           this.closeForm();
           this.loadEvents();
         },
         error: (error) => {
-          this.errorMessage = 'Erreur lors de la création';
+          this.errorMessage = 'Error in the creation';
         }
       });
     }
   }
 
   deleteEvent(id: number, eventName: string): void {
-    if (confirm(`Êtes-vous sûr de vouloir supprimer l'événement "${eventName}" ?`)) {
+    if (confirm(`Are you sure you want to delete the event ? "${eventName}" ?`)) {
       this.eventService.deleteEvent(id).subscribe({
         next: () => {
-          this.successMessage = 'Événement supprimé avec succès';
+          this.successMessage = 'Success, event deleted';
           this.loadEvents();
         },
         error: (error) => {
-          this.errorMessage = 'Erreur lors de la suppression';
+          this.errorMessage = 'Error in the deleting';
         }
       });
     }
