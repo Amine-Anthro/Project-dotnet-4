@@ -191,7 +191,7 @@ namespace Project_Dotnet_4_V2.Server.Services
                         {
                             x.Span("Generated at ");
                             x.Span(DateTime.Now.ToString("dd/MM/yyyy à HH:mm")).Bold();
-                            x.Span(" - Cinepolis © 2025");
+                            x.Span(" - Cinepolis © 2026");
                         });
                 });
             });

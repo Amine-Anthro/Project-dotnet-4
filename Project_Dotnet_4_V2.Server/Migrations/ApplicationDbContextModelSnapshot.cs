@@ -59,9 +59,14 @@ namespace Project_Dotnet_4_V2.Server.Migrations
                     b.Property<int>("RoomId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("RoomId1")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("RoomId");
+
+                    b.HasIndex("RoomId1");
 
                     b.ToTable("Events");
                 });
@@ -259,10 +264,14 @@ namespace Project_Dotnet_4_V2.Server.Migrations
             modelBuilder.Entity("Project_Dotnet_4_V2.Models.Event", b =>
                 {
                     b.HasOne("Project_Dotnet_4_V2.Models.Room", "Room")
-                        .WithMany("Events")
+                        .WithMany()
                         .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("Project_Dotnet_4_V2.Models.Room", null)
+                        .WithMany("Events")
+                        .HasForeignKey("RoomId1");
 
                     b.Navigation("Room");
                 });
@@ -307,15 +316,18 @@ namespace Project_Dotnet_4_V2.Server.Migrations
                 {
                     b.HasOne("Project_Dotnet_4_V2.Models.Reservation", "Reservation")
                         .WithMany("Seats")
-                        .HasForeignKey("ReservationId");
+                        .HasForeignKey("ReservationId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("Project_Dotnet_4_V2.Models.Room", null)
+                    b.HasOne("Project_Dotnet_4_V2.Models.Room", "Room")
                         .WithMany("Seats")
                         .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Reservation");
+
+                    b.Navigation("Room");
                 });
 
             modelBuilder.Entity("Project_Dotnet_4_V2.Models.Reservation", b =>

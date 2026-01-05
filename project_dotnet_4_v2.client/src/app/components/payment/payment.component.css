@@ -6,7 +6,6 @@
   min-height: calc(100vh - 80px);
 }
 
-/* Loading */
 .loading {
   text-align: center;
   padding: 4rem;
@@ -14,7 +13,7 @@
   color: #b0b0b0;
 }
 
-/* Alerts */
+
 .alert {
   padding: 1rem 1.5rem;
   border-radius: 8px;
@@ -46,14 +45,12 @@
   }
 }
 
-/* Payment Content */
 .payment-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
 }
 
-/* Summary & Form Titles */
 .reservation-summary h2,
 .payment-form h2 {
   margin: 0 0 1.5rem 0;
@@ -123,7 +120,6 @@
   color: #ff8a80;
 }
 
-/* Seats List */
 .seats-list {
   padding: 1.5rem;
   border-bottom: 2px solid rgba(199, 127, 58, 0.3);
@@ -165,7 +161,6 @@
   font-weight: bold;
 }
 
-/* Total Section */
 .total-section {
   padding: 1.5rem;
   background: linear-gradient(135deg, #c77f3a 0%, #d89150 100%);
@@ -188,7 +183,6 @@
   font-weight: bold;
 }
 
-/* Payment Form */
 .payment-form {
   background: #1a1a2e;
   border-radius: 12px;
@@ -252,7 +246,6 @@
   gap: 1rem;
 }
 
-/* Action Buttons */
 .action-buttons {
   display: flex;
   gap: 1rem;
@@ -303,7 +296,6 @@
     cursor: not-allowed;
   }
 
-/* Responsive */
 @media (max-width: 768px) {
   .payment-content {
     grid-template-columns: 1fr;

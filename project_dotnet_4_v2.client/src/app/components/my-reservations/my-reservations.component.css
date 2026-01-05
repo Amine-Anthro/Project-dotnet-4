@@ -6,7 +6,6 @@
   min-height: calc(100vh - 80px);
 }
 
-/* Header */
 .page-header {
   display: flex;
   justify-content: space-between;
@@ -36,7 +35,6 @@
     color: white;
   }
 
-/* Alerts */
 .alert {
   padding: 1rem 1.5rem;
   border-radius: 8px;
@@ -68,7 +66,6 @@
   }
 }
 
-/* Loading */
 .loading {
   text-align: center;
   padding: 4rem;
@@ -76,7 +73,6 @@
   font-size: 1.2rem;
 }
 
-/* Liste des réservations */
 .reservations-list {
   display: flex;
   flex-direction: column;
@@ -97,7 +93,6 @@
     border-color: #c77f3a;
   }
 
-/* Header de la carte */
 .card-header {
   display: flex;
   justify-content: space-between;
@@ -148,7 +143,6 @@
   opacity: 0.9;
 }
 
-/* Body de la carte */
 .card-body {
   padding: 1.5rem;
 }
@@ -190,12 +184,11 @@
   color: #b0b0b0;
 }
 
-  .detail-item .icon {
+.detail-item .icon {
     font-size: 1.1rem;
     color: #c77f3a;
-  }
+}
 
-/* Sièges */
 .seats-info {
   margin-bottom: 1.5rem;
   padding-bottom: 1.5rem;
@@ -224,7 +217,6 @@
   font-size: 0.9rem;
 }
 
-/* Prix */
 .price-info {
   display: flex;
   justify-content: space-between;
@@ -243,7 +235,6 @@
   color: #c77f3a;
 }
 
-/* Footer de la carte */
 .card-footer {
   padding: 1.5rem;
   background-color: #2a2a3e;
@@ -323,7 +314,7 @@
   transform: translateY(-2px);
 }
 
-/* État vide */
+
 .empty-state {
   text-align: center;
   padding: 4rem 2rem;
@@ -369,7 +360,7 @@
     box-shadow: 0 6px 20px rgba(199, 127, 58, 0.4);
   }
 
-/* Responsive */
+
 @media (max-width: 768px) {
   .page-header {
     flex-direction: column;

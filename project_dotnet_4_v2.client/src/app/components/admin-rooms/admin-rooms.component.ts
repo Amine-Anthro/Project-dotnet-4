@@ -123,8 +123,27 @@ export class AdminRoomsComponent implements OnInit {
         },
         error: (error) => {
           this.errorMessage = 'Error deleting room';
+
+          if (error.error && error.error.message) {
+            this.errorMessage = error.error.message;
+          } else if (error.status === 404) {
+            this.errorMessage = 'Room not found';
+          } else if (error.status === 400) {
+            this.errorMessage = error.error?.message || 'Cannot delete this room';
+          } else {
+            this.errorMessage = 'Error deleting room. Please try again.';
+          }
+
+          this.clearMessages();
         }
       });
     }
+  }
+
+  private clearMessages(): void {
+    setTimeout(() => {
+      this.successMessage = '';
+      this.errorMessage = '';
+    }, 5000);
   }
 }

@@ -5,9 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Project_Dotnet_4_V2.Data;
-using Project_Dotnet_4_V2.Handlers;
 using Project_Dotnet_4_V2.Repositories;
-using Project_Dotnet_4_V2.Requirements;
 using Project_Dotnet_4_V2.Server.Hubs;
 using Project_Dotnet_4_V2.Server.Repositories;
 using Project_Dotnet_4_V2.Server.Repositories.Project_Dotnet_4_V2.Server.Repositories;
@@ -43,10 +41,7 @@ builder.Services.AddSingleton<IEventNotificationService>(sp =>
 builder.Services.AddHostedService<ReservationExpirationService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 
-builder.Services.AddSingleton<IAuthorizationHandler, IsAccountNotDisabledHandler>();
-builder.Services.AddSingleton<IAuthorizationHandler, IsAdminHandler>();
-builder.Services.AddSingleton<IAuthorizationHandler, IsITMemberHandler>();
-builder.Services.AddSingleton<IAuthorizationHandler, MinimumAgeHandler>();
+
 
 
 
@@ -120,41 +115,9 @@ builder.Services.AddAuthentication(
 builder.Services.AddAuthorization(options =>
 {
    
-    options.AddPolicy("canManageMovie",
-        policy =>
-            policy.AddRequirements(
-                new IsAccountEnabledRequirement(),
-                new IsAllowedToManageMovieRequirement(),
-                new MinimumAgeRequirement(21)
-                ));
-
-
-
-   
-    options.AddPolicy("BossOnly", policy => policy.RequireClaim("Boss"));
-    options.AddPolicy("SuperIT",
-        policy => policy.RequireClaim("Permission", "IT")
-                        .RequireClaim("Boss")
-
-        );
-    options.AddPolicy("AutUsers", policy => policy.RequireAuthenticatedUser());
-
-    options.AddPolicy("BobOnly", policy => policy.RequireUserName("Bob"));
     options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
 
-
-    
-    options.AddPolicy("BossOrEmail", policy =>
-    {
-        policy.RequireAssertion(context =>
-            context.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Surname)?.Value == "TheBoss"
-         || context.User.HasClaim(claim => claim.Type == ClaimTypes.Email));
-    }
-
-    );
-}
-
-);
+});
 
 builder.Services.AddSignalR();
 

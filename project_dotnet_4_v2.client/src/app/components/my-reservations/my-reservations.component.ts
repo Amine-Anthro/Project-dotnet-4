@@ -95,26 +95,25 @@ export class MyReservationsComponent implements OnInit {
 
   cancelReservation(reservation: Reservation): void {
     if (reservation.status === 'Paid') {
-      alert('Impossible d\'annuler une réservation déjà payée');
+      alert('Cannot cancel a paid reservation');
       return;
     }
 
-    if (!confirm(`Êtes-vous sûr de vouloir annuler la réservation #${reservation.id} ?`)) {
+    if (!confirm(`Are you sure you want to cancel reservation #${reservation.id}?`)) {
       return;
     }
 
     this.reservationService.cancelReservation(reservation.id).subscribe({
       next: () => {
-        this.successMessage = 'Réservation annulée avec succès';
+        this.successMessage = 'Reservation cancelled successfully';
         this.loadReservations();
-
         setTimeout(() => {
           this.successMessage = '';
         }, 3000);
       },
       error: (error) => {
-        console.error('Erreur lors de l\'annulation', error);
-        this.errorMessage = error.error?.message || 'Erreur lors de l\'annulation';
+        console.error('Error cancelling reservation:', error);
+        this.errorMessage = error.error?.message || 'Error cancelling reservation';
       }
     });
   }
@@ -148,14 +147,14 @@ export class MyReservationsComponent implements OnInit {
         window.URL.revokeObjectURL(url);
         this.downloadingTickets.delete(reservationId);
 
-        this.successMessage = 'Billet téléchargé avec succès !';
+        this.successMessage = 'Ticket downloaded successfully';
         setTimeout(() => {
           this.successMessage = '';
         }, 3000);
       },
       error: (error) => {
-        console.error('Erreur lors du téléchargement', error);
-        this.errorMessage = 'Erreur lors du téléchargement du billet';
+        console.error('Error during the downloading', error);
+        this.errorMessage = 'Error during the downloading ticket';
         this.downloadingTickets.delete(reservationId);
       }
     });
@@ -168,8 +167,8 @@ export class MyReservationsComponent implements OnInit {
         this.showQRCodeModal(response.qrCode, reservationId);
       },
       error: (error) => {
-        console.error('Erreur lors de la récupération du QR code', error);
-        this.errorMessage = 'Erreur lors de la récupération du QR code';
+        console.error('Error during the recuperation of th QR code', error);
+        this.errorMessage = 'Error during the recuperation of th QR code';
       }
     });
   }
@@ -192,9 +191,9 @@ export class MyReservationsComponent implements OnInit {
 
     modal.innerHTML = `
       <div style="background: white; padding: 2rem; border-radius: 12px; text-align: center; max-width: 400px;">
-        <h3 style="margin: 0 0 1rem 0;">QR Code - Réservation #${reservationId}</h3>
+        <h3 style="margin: 0 0 1rem 0;">QR Code - Reservation #${reservationId}</h3>
         <img src="data:image/png;base64,${qrCodeBase64}" style="width: 250px; height: 250px;" />
-        <p style="margin: 1rem 0; color: #666;">Présentez ce QR code à l'entrée</p>
+        <p style="margin: 1rem 0; color: #666;">Show this QR code at the entrance</p>
         <button id="closeModal" style="
           padding: 0.75rem 2rem;
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);

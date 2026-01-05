@@ -9,7 +9,7 @@
         public SeatStatus Status { get; set; } = SeatStatus.Available;
         public TariffZone Zone { get; set; } = TariffZone.Standard;
         public decimal Price { get; set; }
-
+        public Room Room { get; set; }
         public int? ReservationId { get; set; }
         public Reservation? Reservation { get; set; }
     }

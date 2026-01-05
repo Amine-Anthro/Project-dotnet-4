@@ -8,7 +8,7 @@ namespace Project_Dotnet_4_V2.Server.Repositories
         Task<Room?> GetByIdAsync(int id);
         Task<Room> CreateAsync(Room room);
         Task UpdateAsync(Room room);
-        Task DeleteAsync(int id);
+        Task<bool> DeleteAsync(int id);
         Task<bool> ExistsAsync(int id);
     }
 }

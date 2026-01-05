@@ -65,9 +65,17 @@ namespace Project_Dotnet_4_V2.Server.Services
         public async Task DeleteRoomAsync(int id)
         {
             if (!await _roomRepository.ExistsAsync(id))
+            { 
                 throw new KeyNotFoundException($"Room with id {id} not found");
-
-            await _roomRepository.DeleteAsync(id);
+            }
+            try
+            {
+                await _roomRepository.DeleteAsync(id);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException(ex.Message);
+            }
         }
 
         private void GenerateSeats(Room room)

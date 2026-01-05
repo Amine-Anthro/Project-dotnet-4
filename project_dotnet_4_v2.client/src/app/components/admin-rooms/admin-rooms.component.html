@@ -1,4 +1,13 @@
 <div class="admin-container">
+
+  <div *ngIf="successMessage" class="alert alert-success">
+    ✓ {{ successMessage }}
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-error">
+    ✗ {{ errorMessage }}
+  </div>
+
   <div class="admin-header">
     <h1>Room Management</h1>
     <button class="btn-primary" (click)="openCreateForm()">
@@ -6,20 +15,9 @@
     </button>
   </div>
 
-
-  <div *ngIf="successMessage" class="alert alert-success">
-    {{ successMessage }}
-  </div>
-
-  <div *ngIf="errorMessage" class="alert alert-error">
-    {{ errorMessage }}
-  </div>
-
-
   <div *ngIf="isLoading" class="loading">
     Loading rooms...
   </div>
-
 
   <div *ngIf="!isLoading && !showForm" class="rooms-grid">
     <div *ngFor="let room of rooms" class="room-card">
@@ -62,7 +60,6 @@
     </div>
   </div>
 
-
   <div *ngIf="showForm" class="form-container">
     <div class="form-card">
       <div class="form-header">
@@ -81,7 +78,6 @@
                    placeholder="e.g., Room 1"
                    required>
           </div>
-
         </div>
 
         <h3 class="section-title">Pricing by Zone</h3>
